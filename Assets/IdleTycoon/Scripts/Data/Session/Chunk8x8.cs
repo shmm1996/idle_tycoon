@@ -1,0 +1,81 @@
+using System.Runtime.CompilerServices;
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
+using Unity.Mathematics;
+
+namespace IdleTycoon.Scripts.Data.Session
+{
+    public readonly unsafe struct Chunk8X8
+    {
+        private const int TileFlagsCount = 8;
+        
+        public readonly int2 Position;
+        private readonly ulong* _tileAttributeBitFlags; //0 - ground ... n - building, k - road ...
+        //public chunk_biome
+        //public chunk_temperature
+        
+        public Chunk8X8(int2 position)
+        {
+            Position = position;
+            
+            int tileFlagsSize = sizeof(ulong) * TileFlagsCount;
+            _tileAttributeBitFlags = (ulong*)UnsafeUtility.Malloc(tileFlagsSize, 64, Allocator.Persistent);
+            UnsafeUtility.MemClear(_tileAttributeBitFlags, tileFlagsSize);
+        }
+
+        public void Dispose()
+        {
+            UnsafeUtility.Free(_tileAttributeBitFlags, Allocator.Persistent);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ReadOnly AsReadOnly() => new ReadOnly(this);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private ulong GetTileAttributeFlag(int tile, int attribute) => _tileAttributeBitFlags[attribute] & (1UL << tile);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private ulong GetTileAttributeFlags(int tile)
+        {
+            ulong flags = 0;
+            for (int attribute = 0; attribute < TileFlagsCount; attribute++)
+                flags |= GetTileAttributeFlag(tile, attribute);
+            
+            return flags;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool IsExistTileAttributeFlag(int tile, int attribute) => GetTileAttributeFlag(tile, attribute) != 0;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void AddTileAttributeFlag(int tile, int attribute) => _tileAttributeBitFlags[attribute] |= 1UL << tile;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ClearTileAttributeFlag(int tile, int attribute) => _tileAttributeBitFlags[attribute] &= ~(1UL << tile);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private ulong GetChunkTileAttributeFlag(int attribute) => _tileAttributeBitFlags[attribute];
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool IsChunkExistTileAttributeFlag(int attribute) => GetChunkTileAttributeFlag(attribute) != 0;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetChunkTileAttributeFlag(int attribute, ulong value) => _tileAttributeBitFlags[attribute] = value;
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ClearChunkTileAttributeFlag(int attribute) => SetChunkTileAttributeFlag(attribute, 0);
+        
+        public readonly struct ReadOnly
+        {
+            private readonly Chunk8X8 _chunk;
+
+            public ReadOnly(Chunk8X8 chunk) => _chunk = chunk;
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public bool IsExistTileAttributeFlag(int tile, int attribute) => _chunk.IsExistTileAttributeFlag(tile, attribute);
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public bool IsChunkExistTileAttributeFlag(int attribute) => _chunk.IsChunkExistTileAttributeFlag(attribute);
+        }
+    }
+}
