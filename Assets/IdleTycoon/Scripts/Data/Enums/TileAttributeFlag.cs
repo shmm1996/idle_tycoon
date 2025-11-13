@@ -3,9 +3,9 @@ using System;
 namespace IdleTycoon.Scripts.Data.Enums
 {
     [Flags]
-    public enum TileAttributeFlag
+    public enum TileAttributeFlag : int
     {
-        Ground = 0,
+        IsGround = 0,
         
         //---Building bits--- offset: 1bit
         BuildingResidential = 1 << (BuildingType.Residential + 1),

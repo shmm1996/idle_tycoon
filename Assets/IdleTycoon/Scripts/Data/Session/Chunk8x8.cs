@@ -9,14 +9,14 @@ namespace IdleTycoon.Scripts.Data.Session
     {
         private const int TileFlagsCount = 8;
         
-        public readonly int2 Position;
+        public readonly int2 position;
         private readonly ulong* _tileAttributeBitFlags; //0 - ground ... n - building, k - road ...
         //public chunk_biome
         //public chunk_temperature
         
         public Chunk8X8(int2 position)
         {
-            Position = position;
+            this.position = position;
             
             int tileFlagsSize = sizeof(ulong) * TileFlagsCount;
             _tileAttributeBitFlags = (ulong*)UnsafeUtility.Malloc(tileFlagsSize, 64, Allocator.Persistent);
@@ -27,9 +27,6 @@ namespace IdleTycoon.Scripts.Data.Session
         {
             UnsafeUtility.Free(_tileAttributeBitFlags, Allocator.Persistent);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ReadOnly AsReadOnly() => new ReadOnly(this);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private ulong GetTileAttributeFlag(int tile, int attribute) => _tileAttributeBitFlags[attribute] & (1UL << tile);
@@ -67,15 +64,18 @@ namespace IdleTycoon.Scripts.Data.Session
         
         public readonly struct ReadOnly
         {
-            private readonly Chunk8X8 _chunk;
+            private readonly Chunk8X8* _chunk;
 
-            public ReadOnly(Chunk8X8 chunk) => _chunk = chunk;
+            public ReadOnly(Chunk8X8* chunk) => _chunk = chunk;
             
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public bool IsExistTileAttributeFlag(int tile, int attribute) => _chunk.IsExistTileAttributeFlag(tile, attribute);
+            public bool IsExistTileAttributeFlag(int tile, int attribute) => _chunk->IsExistTileAttributeFlag(tile, attribute);
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public ulong GetTileAttributeFlags(int tile) => _chunk->GetTileAttributeFlags(tile);
             
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public bool IsChunkExistTileAttributeFlag(int attribute) => _chunk.IsChunkExistTileAttributeFlag(attribute);
+            public bool IsChunkExistTileAttributeFlag(int attribute) => _chunk->IsChunkExistTileAttributeFlag(attribute);
         }
     }
 }

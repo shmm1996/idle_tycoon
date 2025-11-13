@@ -11,5 +11,8 @@ namespace IdleTycoon.Scripts.Utils
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2Int ToVector2Int(this int2 v) => new(v.x, v.y);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Vector3Int ToVector3Int(this int2 v, int z = 0) => new(v.x, v.y, z);
     }
 }

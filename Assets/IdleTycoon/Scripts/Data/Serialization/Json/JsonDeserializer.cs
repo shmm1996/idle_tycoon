@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 using IdleTycoon.Scripts.Data.Enums;
-using IdleTycoon.Scripts.Data.Serialization.Json.Models;
+using IdleTycoon.Scripts.Data.Serialization.Models;
 using IdleTycoon.Scripts.Utils;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
@@ -27,7 +27,8 @@ namespace IdleTycoon.Scripts.Data.Serialization.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe Session.WorldMap* AllocWorldMap(int2 size)
         {
-            var worldMap = (Session.WorldMap*)UnsafeUtility.Malloc(sizeof(Session.WorldMap), 64, Allocator.Persistent);
+            int worldMapSize = sizeof(Session.WorldMap);
+            var worldMap = (Session.WorldMap*)UnsafeUtility.Malloc(worldMapSize, 64, Allocator.Persistent);
             *worldMap = new Session.WorldMap(size);
             
             return worldMap;
@@ -36,16 +37,16 @@ namespace IdleTycoon.Scripts.Data.Serialization.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe void SetChunkTileAttributeFlags(Session.WorldMap* sessionWorldMap, Chunk8X8 chunk)
         {
-            ref Session.Chunk8X8 sessionChunk = ref sessionWorldMap->GetChunk(chunk.position.ToInt2());
+            Session.Chunk8X8* sessionChunk = sessionWorldMap->GetChunk(chunk.position.ToInt2());
             foreach (Chunk8X8TileAttributeFlags chunkTileAttribute in chunk.tileAttributeFlags)
             {
                 if (!IsSerializable((TileAttributeFlag)chunkTileAttribute.id)) continue;
-                sessionChunk.SetChunkTileAttributeFlag(chunkTileAttribute.id, chunkTileAttribute.value);
+                sessionChunk->SetChunkTileAttributeFlag(chunkTileAttribute.id, chunkTileAttribute.value);
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool IsSerializable(TileAttributeFlag flag) => flag == TileAttributeFlag.Ground;
+        private static bool IsSerializable(TileAttributeFlag flag) => flag == TileAttributeFlag.IsGround;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe void SetChunkTileEntities(Session.WorldMap* sessionWorldMap, TileEntity[] entities)
