@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using IdleTycoon.Scripts.Data.Enums;
 using IdleTycoon.Scripts.Data.Session;
 using IdleTycoon.Scripts.Utils;
@@ -15,7 +16,12 @@ namespace IdleTycoon.Scripts.TileMap.Processor
         {
             _worldMap = worldMap;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool OnWorldMap(int2 tile) =>
+            tile.x >= 0 && tile.y >= 0 && tile.x < _worldMap.Size.x && tile.y < _worldMap.Size.y;
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasAttribute(int2 tile, TileAttributeFlag attribute)
         {
             Chunk8X8.ReadOnly chunk = _worldMap.GetChunkAsReadOnly(Chunk8X8Utils.ToChunk(tile));

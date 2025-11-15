@@ -79,7 +79,9 @@
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Session/Proxy/TileProxy.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Session/GameSession.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Enums/BuildingType.cs" />
-    <Compile Include="Assets\IdleTycoon\Scripts\Utils\RandomProvider.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Data\Enums\TileTransformation.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Utils\FlagsUtils.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Utils\HashFunctions.cs" />
     <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.6.0.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Packages/System.ComponentModel.Annotations.5.0.0/lib/netstandard2.1/System.ComponentModel.Annotations.xml" />
     <None Include="Assets/Packages/System.ComponentModel.Annotations.5.0.0/useSharedDesignerContext.txt" />

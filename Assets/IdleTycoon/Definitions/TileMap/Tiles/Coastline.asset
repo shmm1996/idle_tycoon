@@ -16,9 +16,18 @@ MonoBehaviour:
   tiles:
   - tile: {fileID: 11400000, guid: 51026b489eabe659b91099caed858770, type: 2}
     weight: 1
+    transformation:
+      rotationFlags: 0
+      flipFlags: 3
   - tile: {fileID: 11400000, guid: eb98640f5add1edff85041189c978ffc, type: 2}
     weight: 1
+    transformation:
+      rotationFlags: 0
+      flipFlags: 3
   - tile: {fileID: 11400000, guid: 2eff22fe057df2aa2baca50b46fac698, type: 2}
     weight: 1
+    transformation:
+      rotationFlags: 0
+      flipFlags: 3
   data:
     isGround: 0

@@ -55,10 +55,10 @@ namespace IdleTycoon.Scripts.TileMap.Processor
             for (int i = 0; i < limit && _toResolve.Count > 0; i++)
             {
                 if (!_toResolve.TryDequeue(out int2 tile)) break;
+                processed.Add(tile);
                 foreach (TilemapSubProcessor<TileTerrainDefinition> subProcessor in _subProcessors)
                 {
                     if (!subProcessor.TryLazyResolveTile(tile)) continue;
-                    processed.Add(tile);
                     foreach (int2 affected in subProcessor.GetAffectedTiles(tile))
                         if (!processed.Contains(affected))
                             _toResolve.Enqueue(affected);

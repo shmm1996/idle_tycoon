@@ -45,6 +45,17 @@ namespace IdleTycoon.Scripts.Utils
 
             return TrailingZeroTablePtr[index];
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int PopCount32(uint v)
+        {
+            v = v - ((v >> 1) & 0x55555555u);
+            v = (v & 0x33333333u) + ((v >> 2) & 0x33333333u);
+            v = (v + (v >> 4)) & 0x0F0F0F0Fu;
+            v = v * 0x01010101u;
+
+            return (int)(v >> 24);
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Cleanup() => UnsafeUtility.Free(TrailingZeroTablePtr, Allocator.Persistent);

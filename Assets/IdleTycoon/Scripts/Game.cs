@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using IdleTycoon.Scripts.Data.Serialization.Json;
 using IdleTycoon.Scripts.Data.Session;
 using IdleTycoon.Scripts.TileMap.Definitions.Rules;
 using IdleTycoon.Scripts.TileMap.Definitions.Tiles;
 using IdleTycoon.Scripts.TileMap.Processor;
-using IdleTycoon.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
@@ -20,7 +18,6 @@ namespace IdleTycoon.Scripts
 
         private GameSession _session;
         private TilemapProcessor _processor;
-        private RandomProvider _random;
 
         private void Start()
         {
@@ -40,8 +37,6 @@ namespace IdleTycoon.Scripts
 
         private void InstallGame()
         {
-            _random = new RandomProvider(new Dictionary<string, int> { { "tilemap", 0 } });
-            
             _session = new GameSession();
 
             unsafe
@@ -53,7 +48,7 @@ namespace IdleTycoon.Scripts
             
             SessionTileProvider sessionTiles = new(context.worldMap);
 
-            TilemapSubProcessor<TileTerrainDefinition> terrainSubProcessor = new(terrainTilemap, sessionTiles, terrainRules, _random);
+            TilemapSubProcessor<TileTerrainDefinition> terrainSubProcessor = new(terrainTilemap, sessionTiles, terrainRules);
 
             _processor = new TilemapProcessor(context, terrainSubProcessor);
         }

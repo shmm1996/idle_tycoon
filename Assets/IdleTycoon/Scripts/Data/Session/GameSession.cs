@@ -54,7 +54,7 @@ namespace IdleTycoon.Scripts.Data.Session
         
         public class Subjects
         {
-            public readonly ReplaySubject<WorldMap.ReadOnly> onWorldLoaded = new(100);
+            public readonly ReplaySubject<WorldMap.ReadOnly> onWorldLoaded = new(1);
             public readonly ReplaySubject<int2[]> onTilesUpdated = new(1024);
             public readonly ReplaySubject<int2[]> onTilesCleaned = new(1024);
             

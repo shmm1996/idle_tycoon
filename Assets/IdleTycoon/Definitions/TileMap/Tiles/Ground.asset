@@ -15,10 +15,19 @@ MonoBehaviour:
   tileName: ground
   tiles:
   - tile: {fileID: 11400000, guid: a7b6db16c44067e84a6f165866c328aa, type: 2}
-    weight: 8
+    weight: 5
+    transformation:
+      rotationFlags: 0
+      flipFlags: 0
   - tile: {fileID: 11400000, guid: 1dbf93bb0de576152b275a6a05f78ca5, type: 2}
     weight: 1
+    transformation:
+      rotationFlags: -1
+      flipFlags: -1
   - tile: {fileID: 11400000, guid: 80f9c4ae2f395a019b45a8540a526d0c, type: 2}
     weight: 1
+    transformation:
+      rotationFlags: -1
+      flipFlags: -1
   data:
     isGround: 1
