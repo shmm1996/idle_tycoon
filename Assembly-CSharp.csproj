@@ -49,37 +49,44 @@
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Session/TileEntities/Building.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Utils/MathConvertExtensions.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Enums/TileAttributeFlag.cs" />
-    <Compile Include="Assets/IdleTycoon/Scripts/TileMap/Processor/TilemapSubProcessor.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Serialization/Models/Chunk8X8TileAttributeFlags.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Serialization/Json/JsonDeserializer.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/CustomEditor/Attributes/EnumFlagsAttribute.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Definitions/BuildingDefinition.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Utils/HashQueue.cs" />
-    <Compile Include="Assets/IdleTycoon/Scripts/TileMap/Processor/SessionTileProvider.cs" />
-    <Compile Include="Assets/IdleTycoon/Scripts/TileMap/Definitions/Rules/TerrainGroundRuleDefinition.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Session/Chunk8x8.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Serialization/Models/WorldMap.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Utils/WeightedSet.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Serialization/Models/Chunk8X8.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Game.cs" />
-    <Compile Include="Assets/IdleTycoon/Scripts/TileMap/Processor/TilemapProcessor.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Utils/Chunk8X8Utils.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Utils/FastPool.cs" />
-    <Compile Include="Assets/IdleTycoon/Scripts/Data/Session/WorldMap.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/CustomEditor/PropertyDrawers/EnumFlagsDrawer.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Serialization/Models/TileEntity.cs" />
-    <Compile Include="Assets/IdleTycoon/Scripts/TileMap/Definitions/Rules/TilemapRuleDefinition.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Session/Proxy/BuildingProxy.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Definitions/TerrainEnvironmentDefinition.cs" />
-    <Compile Include="Assets/IdleTycoon/Scripts/TileMap/Definitions/Tiles/TileDefinition.cs" />
-    <Compile Include="Assets/IdleTycoon/Scripts/TileMap/Definitions/Rules/TerrainCoastlineRuleDefinition.cs" />
-    <Compile Include="Assets/IdleTycoon/Scripts/TileMap/Definitions/Tiles/TileTerrainDefinition.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Utils/BitUtil.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Definitions/TileStructureDefinition.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Session/Proxy/TileProxy.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Session/GameSession.cs" />
     <Compile Include="Assets/IdleTycoon/Scripts/Data/Enums/BuildingType.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Data\Commands\TerrainCommand.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Data\Enums\TileTransformation.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Data\Commands\IGameCommand.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Data\Session\CommandsQueue.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Data\Session\WorldMap.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Data\Session\WorldMap.Terrain.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Data\Systems\CommandProcessor.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Data\Systems\CommandProcessor.Terrain.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Data\Systems\ISystem.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Definitions\Rules\TerrainCoastlineRuleDefinition.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Definitions\Rules\TerrainGroundRuleDefinition.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Definitions\Rules\TilemapRuleDefinition.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Definitions\Tiles\TileDefinition.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Definitions\Tiles\TileTerrainDefinition.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Processor\SessionTileProvider.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Processor\TilemapProcessor.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Processor\TilemapSubProcessor.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Utils\FlagsUtils.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Utils\HashFunctions.cs" />
     <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.6.0.0/useSharedDesignerContext.txt" />
@@ -816,6 +823,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Assets\IdleTycoon\Scripts\Presentation\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

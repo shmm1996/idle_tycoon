@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using IdleTycoon.Scripts.Data.Enums;
-using IdleTycoon.Scripts.TileMap.Definitions.Tiles;
-using IdleTycoon.Scripts.TileMap.Processor;
+using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
+using IdleTycoon.Scripts.Presentation.Tilemap.Processor;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace IdleTycoon.Scripts.TileMap.Definitions.Rules
+namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
 {
     [CreateAssetMenu(fileName = "CoastlineRule", menuName = "Definitions/TileMap/Rules/CoastlineRule", order = 0)]
     public class TerrainCoastlineRuleDefinition : TilemapRuleDefinition<TileTerrainDefinition>

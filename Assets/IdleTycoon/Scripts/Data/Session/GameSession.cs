@@ -1,4 +1,6 @@
 using System;
+using IdleTycoon.Scripts.Data.Systems;
+using IdleTycoon.Scripts.Utils;
 using R3;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
@@ -10,12 +12,26 @@ namespace IdleTycoon.Scripts.Data.Session
     {
         private WorldMap* _worldMap;
         private readonly Subjects _subjects = new();
+        private readonly ISystem[] _systems;
+        
+        public readonly CommandsQueue commands = new();
+        public readonly HashQueue<int2> toUpdate = new();
+        
+        public WorldMap* WorldMap => _worldMap;
+
+        public GameSession()
+        {
+            _systems = new ISystem[]
+            {
+                new CommandProcessor(this)
+            };
+        }
         
         public void Dispose()
         {
             DisposeWorldMap();
         }
-
+        
         private void DisposeWorldMap()
         {
             if (_worldMap == null) return;
@@ -23,32 +39,40 @@ namespace IdleTycoon.Scripts.Data.Session
             _worldMap->Dispose();
             UnsafeUtility.Free(_worldMap, Allocator.Persistent);
         }
-
+        
         public Context GetContext() => new(this);
 
         public void LoadWorldMap(WorldMap* worldMap)
         {
             DisposeWorldMap();
-
             _worldMap = worldMap;
             
-            _subjects.onWorldLoaded.OnNext(new WorldMap.ReadOnly(_worldMap));
+            _subjects.onWorldLoaded.OnNext(new WorldMap.ReadOnly(this._worldMap));
+        }
+
+        public void Init()
+        {
+            foreach (ISystem system in _systems) 
+                system.Init();
         }
         
         public void Tick()
         {
-            
+            foreach (ISystem system in _systems) 
+                system.OnTick();
         }
         
         public class Context
         {
             public readonly WorldMap.ReadOnly worldMap;
             public readonly Subjects.Observables observables;
+            public readonly CommandsQueue.Enqueuer commands;
 
-            public Context(GameSession context)
+            public Context(GameSession session)
             {
-                worldMap = new WorldMap.ReadOnly(context._worldMap);
-                observables = new Subjects.Observables(context._subjects);
+                worldMap = new WorldMap.ReadOnly(session._worldMap);
+                observables = new Subjects.Observables(session._subjects);
+                commands = session.commands.GetEnqueuer();
             }
         }
         

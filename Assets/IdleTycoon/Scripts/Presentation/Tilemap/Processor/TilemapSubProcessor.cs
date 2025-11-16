@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using IdleTycoon.Scripts.Data.Enums;
-using IdleTycoon.Scripts.TileMap.Definitions.Rules;
-using IdleTycoon.Scripts.TileMap.Definitions.Tiles;
+using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules;
+using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
 using IdleTycoon.Scripts.Utils;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace IdleTycoon.Scripts.TileMap.Processor
+namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
 {
     public sealed class TilemapSubProcessor<TTileDefinition>
         where TTileDefinition : TileDefinition
     {
-        private readonly Tilemap _tilemap;
+        private readonly UnityEngine.Tilemaps.Tilemap _tilemap;
         private readonly SessionTileProvider _sessionTiles;
         private readonly TilemapRuleDefinition<TTileDefinition>[] _rules;
         
@@ -31,7 +31,7 @@ namespace IdleTycoon.Scripts.TileMap.Processor
         private readonly Dictionary<(int2, TilemapRuleDefinition<TTileDefinition>), bool> _matchCache;
         private readonly int2[] _affectedBuffer;
         
-        public TilemapSubProcessor(Tilemap tilemap, SessionTileProvider sessionTiles, TilemapRuleDefinition<TTileDefinition>[] rules)
+        public TilemapSubProcessor(UnityEngine.Tilemaps.Tilemap tilemap, SessionTileProvider sessionTiles, TilemapRuleDefinition<TTileDefinition>[] rules)
         {
             _tilemap = tilemap;
             _sessionTiles = sessionTiles;

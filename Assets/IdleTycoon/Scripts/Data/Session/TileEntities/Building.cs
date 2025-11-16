@@ -4,6 +4,6 @@ namespace IdleTycoon.Scripts.Data.Session.TileEntities
 {
     public struct Building
     {
-        public int2 Position;
+        public int2 tile;
     }
 }

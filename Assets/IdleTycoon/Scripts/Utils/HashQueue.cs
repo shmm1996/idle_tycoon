@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace IdleTycoon.Scripts.Utils
@@ -13,6 +14,12 @@ namespace IdleTycoon.Scripts.Utils
         {
             if (_queued.Add(item))
                 _queue.Enqueue(item);
+        }
+
+        public void EnqueueRange(ReadOnlySpan<T> items)
+        {
+            foreach (var item in items)
+                Enqueue(item);
         }
         
         public bool TryDequeue(out T item)

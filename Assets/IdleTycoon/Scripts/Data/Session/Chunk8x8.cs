@@ -32,7 +32,7 @@ namespace IdleTycoon.Scripts.Data.Session
         private ulong GetTileAttributeFlag(int tile, int attribute) => _tileAttributeBitFlags[attribute] & (1UL << tile);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private ulong GetTileAttributeFlags(int tile)
+        public ulong GetTileAttributeFlags(int tile)
         {
             ulong flags = 0;
             for (int attribute = 0; attribute < TileFlagsCount; attribute++)
@@ -42,13 +42,13 @@ namespace IdleTycoon.Scripts.Data.Session
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool IsExistTileAttributeFlag(int tile, int attribute) => GetTileAttributeFlag(tile, attribute) != 0;
+        public bool IsExistTileAttributeFlag(int tile, int attribute) => GetTileAttributeFlag(tile, attribute) != 0;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void AddTileAttributeFlag(int tile, int attribute) => _tileAttributeBitFlags[attribute] |= 1UL << tile;
+        public void AddTileAttributeFlag(int tile, int attribute) => _tileAttributeBitFlags[attribute] |= 1UL << tile;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ClearTileAttributeFlag(int tile, int attribute) => _tileAttributeBitFlags[attribute] &= ~(1UL << tile);
+        public void ClearTileAttributeFlag(int tile, int attribute) => _tileAttributeBitFlags[attribute] &= ~(1UL << tile);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private ulong GetChunkTileAttributeFlag(int attribute) => _tileAttributeBitFlags[attribute];

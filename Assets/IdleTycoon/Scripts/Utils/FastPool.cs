@@ -70,34 +70,36 @@ namespace IdleTycoon.Scripts.Utils
             _capacity = 0;
             _count = 0;
         }
-
+        
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetActive(int index, bool value)
+        private void SetAsActive(int index)
         {
             int wordIndex = index >> 6;
-            int bit = index & 63;
-            ulong mask = 1UL << bit;
 
-            if (value)
-                _activeBits[wordIndex] |= mask;
-            else
-                _activeBits[wordIndex] &= ~mask;
-
-            if (!value && wordIndex < _firstWordWithFreeBit)
-                _firstWordWithFreeBit = wordIndex;
-            else if (value && _firstWordWithFreeBit == wordIndex && _activeBits[wordIndex] == ulong.MaxValue)
+            _activeBits[wordIndex] |= 1UL << (index & 63);
+            
+            if (_firstWordWithFreeBit == wordIndex && _activeBits[wordIndex] == ulong.MaxValue)
                 _firstWordWithFreeBit++;
 
-            if (value)
-            {
-                if (wordIndex < _firstWordWithActiveBits) _firstWordWithActiveBits = wordIndex;
-                if (wordIndex > _lastWordWithActiveBits) _lastWordWithActiveBits = wordIndex;
-            }
-            else if (_activeBits[wordIndex] == 0)
-            {
-                if (wordIndex == _firstWordWithActiveBits) _firstWordWithActiveBits = FindNextActiveWord(wordIndex + 1);
-                if (wordIndex == _lastWordWithActiveBits) _lastWordWithActiveBits = FindPrevActiveWord(wordIndex - 1);
-            }
+            if (wordIndex < _firstWordWithActiveBits) _firstWordWithActiveBits = wordIndex;
+            if (wordIndex > _lastWordWithActiveBits) _lastWordWithActiveBits = wordIndex;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void SetAsInactive(int index)
+        {
+            int wordIndex = index >> 6;
+
+            _activeBits[wordIndex] &= ~(1UL << (index & 63));
+
+            if (wordIndex < _firstWordWithFreeBit)
+                _firstWordWithFreeBit = wordIndex;
+
+            if (_activeBits[wordIndex] != 0) return;
+            
+            if (wordIndex == _firstWordWithActiveBits) _firstWordWithActiveBits = FindNextActiveWord(wordIndex + 1);
+            if (wordIndex == _lastWordWithActiveBits) _lastWordWithActiveBits = FindPrevActiveWord(wordIndex - 1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -124,7 +126,7 @@ namespace IdleTycoon.Scripts.Utils
             int gen = ((_ids[index] >> 16) + 1) & 0xFFFF;
             _ids[index] = (gen << 16) | index;
 
-            SetActive(index, true);
+            SetAsActive(index);
             _count++;
 
             return _ids[index];
@@ -137,21 +139,14 @@ namespace IdleTycoon.Scripts.Utils
             for (int w = _firstWordWithFreeBit; w < words; w++)
             {
                 ulong word = _activeBits[w];
-                if (word != ulong.MaxValue)
-                {
-                    ulong notWord = ~word;
-                    int bit = BitUtil.TrailingZeroCount(notWord);
-                    int idx = (w << 6) + bit;
-                    if (idx < _capacity)
-                    {
-                        if ((word | (1UL << bit)) == ulong.MaxValue)
-                            _firstWordWithFreeBit = w + 1;
-                        else
-                            _firstWordWithFreeBit = w;
-
-                        return idx;
-                    }
-                }
+                if (word == ulong.MaxValue) continue;
+                
+                ulong notWord = ~word;
+                int bit = BitUtil.TrailingZeroCount(notWord);
+                int freeSlot = (w << 6) + bit;
+                _firstWordWithFreeBit = (word | (1UL << bit)) == ulong.MaxValue ? w + 1 : w;
+                    
+                return freeSlot;
             }
 
             return -1;
@@ -195,6 +190,16 @@ namespace IdleTycoon.Scripts.Utils
             _ids = newIds;
             _activeBits = newActiveBits;
             _capacity = newCapacity;
+            
+            _firstWordWithActiveBits = int.MaxValue;
+            _lastWordWithActiveBits = -1;
+            int words = _capacity / 64;
+            for (int w = 0; w < words; w++)
+            {
+                if (_activeBits[w] == 0) continue;
+                if (w < _firstWordWithActiveBits) _firstWordWithActiveBits = w;
+                if (w > _lastWordWithActiveBits) _lastWordWithActiveBits = w;
+            }
         }
 
         public ref T Get(int entityId)
@@ -207,7 +212,18 @@ namespace IdleTycoon.Scripts.Utils
             return ref _entities[index];
         }
 
-        public ActiveSpanEnumerable AsSpanEnumerable() => new ActiveSpanEnumerable(this);
+        public bool Remove(int entityId)
+        {
+            int index = entityId & 0xFFFF;
+            if (index < 0 || index >= _capacity) return false;
+            if (!IsActive(index) || _ids[index] != entityId) return false;
+            
+            SetAsInactive(index);
+            _count--;
+            return true;
+        }
+
+        public ActiveSpanEnumerable AsSpanEnumerable() => new(this);
 
         public readonly ref struct EntityRef<TValue> where TValue : unmanaged
         {
@@ -236,7 +252,7 @@ namespace IdleTycoon.Scripts.Utils
             private readonly FastPool<T> _pool;
 
             public ActiveSpanEnumerable(FastPool<T> pool) => _pool = pool;
-            public ActiveSpanEnumerator GetEnumerator() => new ActiveSpanEnumerator(_pool);
+            public ActiveSpanEnumerator GetEnumerator() => new(_pool);
         }
 
         public ref struct ActiveSpanEnumerator
@@ -246,6 +262,7 @@ namespace IdleTycoon.Scripts.Utils
             private int _wordIndex;
             private int _index;
             private int _remaining;
+            private readonly int _lastWord;
 
             public ActiveSpanEnumerator(FastPool<T> pool)
             {
@@ -254,13 +271,14 @@ namespace IdleTycoon.Scripts.Utils
                 _wordIndex = pool._firstWordWithActiveBits - 1;
                 _index = -1;
                 _remaining = pool._count;
+                _lastWord = _pool._lastWordWithActiveBits;
             }
 
-            public EntityRef<T> Current => new EntityRef<T>(_pool._ids[_index], &_pool._entities[_index]);
+            public EntityRef<T> Current => new(_pool._ids[_index], &_pool._entities[_index]);
 
             public bool MoveNext()
             {
-                if (_remaining <= 0 || _wordIndex > _pool._lastWordWithActiveBits) return false;
+                if (_remaining <= 0 || _wordIndex > _lastWord) return false;
 
                 while (true)
                 {
@@ -275,7 +293,7 @@ namespace IdleTycoon.Scripts.Utils
                     }
 
                     _wordIndex++;
-                    if (_wordIndex > _pool._lastWordWithActiveBits) return false;
+                    if (_wordIndex > _lastWord) return false;
 
                     _bitMask = _pool._activeBits[_wordIndex];
                 }

@@ -1,8 +1,8 @@
 using IdleTycoon.Scripts.Data.Serialization.Json;
 using IdleTycoon.Scripts.Data.Session;
-using IdleTycoon.Scripts.TileMap.Definitions.Rules;
-using IdleTycoon.Scripts.TileMap.Definitions.Tiles;
-using IdleTycoon.Scripts.TileMap.Processor;
+using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules;
+using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
+using IdleTycoon.Scripts.Presentation.Tilemap.Processor;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;

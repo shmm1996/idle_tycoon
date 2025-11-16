@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using IdleTycoon.Scripts.TileMap.Definitions.Tiles;
-using IdleTycoon.Scripts.TileMap.Processor;
+using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
+using IdleTycoon.Scripts.Presentation.Tilemap.Processor;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace IdleTycoon.Scripts.TileMap.Definitions.Rules
+namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
 {
     public abstract class TilemapRuleDefinition<TTarget> : ScriptableObject
         where TTarget : TileDefinition 

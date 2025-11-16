@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using IdleTycoon.Scripts.Data.Session;
-using IdleTycoon.Scripts.TileMap.Definitions.Tiles;
+using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
 using IdleTycoon.Scripts.Utils;
 using R3;
 using Unity.Mathematics;
 
-namespace IdleTycoon.Scripts.TileMap.Processor
+namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
 {
     public sealed class TilemapProcessor : IDisposable
     {

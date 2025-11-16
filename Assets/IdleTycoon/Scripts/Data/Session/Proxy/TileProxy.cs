@@ -17,6 +17,6 @@ namespace IdleTycoon.Scripts.Data.Session.Proxy
         }
 
         public TileProxy(int2 position, WorldMap.ReadOnly world)
-            : this(position, world.GetChunkAsReadOnly(Chunk8X8Utils.ToChunk(position))) { }
+            : this(position, world.GetChunk(Chunk8X8Utils.ToChunk(position))) { }
     }
 }

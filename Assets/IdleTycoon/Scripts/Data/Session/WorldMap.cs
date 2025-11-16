@@ -7,7 +7,7 @@ using Unity.Mathematics;
 
 namespace IdleTycoon.Scripts.Data.Session
 {
-    public unsafe struct WorldMap
+    public unsafe partial struct WorldMap
     {
         private readonly int2 _size;
         private readonly Chunk8X8* _chunks;
@@ -49,12 +49,22 @@ namespace IdleTycoon.Scripts.Data.Session
         public Chunk8X8* GetChunk(int2 chunk) => _chunks + (chunk.x + chunk.y * _size.x);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Chunk8X8.ReadOnly GetChunkAsReadOnly(int2 chunk) => new(GetChunk(chunk));
+        public Chunk8X8* GetTilesChunk(int2 tile) => GetChunk(Chunk8X8Utils.ToChunk(tile));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddBuilding(Building building)
+        public void SetBuilding(Building building)
         {
-            _tileToBuilding[building.Position] = _buildings.Add(building);
+            _tileToBuilding[building.tile] = _buildings.Add(building);
+            //TODO:  Add chunk.tileAttributeFlag(position, (int)TileAttributeFlag.Building).
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void RemoveBuilding(int2 tile)
+        {
+            if (!_tileToBuilding.TryGetValue(tile, out int id)) return;
+            
+            _tileToBuilding.Remove(tile);
+            _buildings.Remove(id);
             //TODO:  Add chunk.tileAttributeFlag(position, (int)TileAttributeFlag.Building).
         }
         
@@ -67,7 +77,10 @@ namespace IdleTycoon.Scripts.Data.Session
             public ReadOnly(WorldMap* worldMap) => _worldMap = worldMap;
             
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Chunk8X8.ReadOnly GetChunkAsReadOnly(int2 chunk) => _worldMap->GetChunkAsReadOnly(chunk);
+            public Chunk8X8.ReadOnly GetChunk(int2 chunk) => new(_worldMap->GetChunk(chunk));
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Chunk8X8.ReadOnly GetTilesChunk(int2 tile) => new(_worldMap->GetTilesChunk(tile));
         }
     }
 }

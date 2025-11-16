@@ -11,10 +11,10 @@ namespace IdleTycoon.Scripts.Utils
         private const int TopChunkRowIndexStatsFrom = (ChunkSize - 1) * ChunkSize;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int2 ToLocal(int2 global) => new int2(global.x & ChunkMask, global.y & ChunkMask);
+        public static int2 ToLocal(int2 global) => new(global.x & ChunkMask, global.y & ChunkMask);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int2 ToChunk(int2 global) => new int2(global.x >> LocalPositionSize, global.y >> LocalPositionSize);
+        public static int2 ToChunk(int2 global) => new(global.x >> LocalPositionSize, global.y >> LocalPositionSize);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int ToIndex(int2 local) => local.x + local.y * ChunkSize;
@@ -23,7 +23,7 @@ namespace IdleTycoon.Scripts.Utils
         public static int ToIndexFromGlobal(int2 global) => (global.x & ChunkMask) + (global.y & ChunkMask) * ChunkSize;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int2 ToLocal(int index) => new int2(index & ChunkSize, index / ChunkSize);
+        public static int2 ToLocal(int index) => new(index & ChunkSize, index / ChunkSize);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int2 ToGlobal(int2 chunk, int2 local) => chunk * ChunkSize + local;

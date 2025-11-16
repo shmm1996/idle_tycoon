@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
-namespace IdleTycoon.Scripts.TileMap.Definitions.Tiles
+namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles
 {
     public abstract class TileDefinition : ScriptableObject
     {
