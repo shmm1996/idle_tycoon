@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace IdleTycoon.Scripts.Utils
 {
-    public class WeightedSet<T>
+    public sealed class WeightedSet<T>
     {
         private readonly T[] _source;
         private readonly int[] _indices;

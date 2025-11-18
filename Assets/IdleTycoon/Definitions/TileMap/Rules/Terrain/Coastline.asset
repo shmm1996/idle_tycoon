@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 624039b96ffc4792a7b6853cc7fbd6bd, type: 3}
+  m_Name: Coastline
+  m_EditorClassIdentifier: 
+  target: {fileID: 11400000, guid: 4aa425703aa5f211bb5c3376d62ad7b5, type: 2}
+  priority: 99
+  topTile: {fileID: 11400000, guid: e5ed2565c1b8e33c285270587491add9, type: 2}

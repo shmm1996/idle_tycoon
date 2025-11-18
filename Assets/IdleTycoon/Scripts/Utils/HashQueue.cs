@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IdleTycoon.Scripts.Utils
 {
-    public class HashQueue<T>
+    public sealed class HashQueue<T>
     {
         private readonly Queue<T> _queue = new();
         private readonly HashSet<T> _queued = new();

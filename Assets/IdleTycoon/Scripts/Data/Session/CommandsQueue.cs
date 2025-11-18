@@ -3,7 +3,7 @@ using IdleTycoon.Scripts.Data.Commands;
 
 namespace IdleTycoon.Scripts.Data.Session
 {
-    public class CommandsQueue
+    public sealed class CommandsQueue
     {
         private readonly Queue<IGameCommand> _commands = new();
         
@@ -17,7 +17,7 @@ namespace IdleTycoon.Scripts.Data.Session
         
         public Dequeuer GetDequeuer() => new(this);
 
-        public class Enqueuer
+        public sealed class Enqueuer
         {
             private readonly CommandsQueue _commands;
             
@@ -28,7 +28,7 @@ namespace IdleTycoon.Scripts.Data.Session
             public void Enqueue(IGameCommand command) => _commands.Enqueue(command);
         }
         
-        public class Dequeuer
+        public sealed class Dequeuer
         {
             private readonly CommandsQueue _commands;
             

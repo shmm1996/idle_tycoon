@@ -18,16 +18,14 @@ MonoBehaviour:
     weight: 1
     transformation:
       rotationFlags: 0
-      flipFlags: 3
+      flipFlags: 2
   - tile: {fileID: 11400000, guid: eb98640f5add1edff85041189c978ffc, type: 2}
     weight: 1
     transformation:
       rotationFlags: 0
-      flipFlags: 3
+      flipFlags: 2
   - tile: {fileID: 11400000, guid: 2eff22fe057df2aa2baca50b46fac698, type: 2}
     weight: 1
     transformation:
       rotationFlags: 0
-      flipFlags: 3
-  data:
-    isGround: 0
+      flipFlags: 2

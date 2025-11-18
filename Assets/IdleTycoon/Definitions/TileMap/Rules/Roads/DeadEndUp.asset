@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 976c8ef999e94949b03e24ac5b0622be, type: 3}
+  m_Name: DeadEndUp
+  m_EditorClassIdentifier: 
+  target: {fileID: 11400000, guid: 01bf5d4aa190500cba770361ebd7e91d, type: 2}
+  priority: 99
+  isRoadNeighborFlags: 2
+  isNotRoadNeighborFlags: 88

@@ -9,15 +9,21 @@ using UnityEngine.Tilemaps;
 
 namespace IdleTycoon.Scripts
 {
-    public class Game : MonoBehaviour
+    public sealed class Game : MonoBehaviour
     {
         [SerializeField] [FormerlySerializedAs("Terrain")] private Tilemap terrainTilemap;
-        [SerializeField] private TilemapRuleDefinition<TileTerrainDefinition>[] terrainRules;
+        [SerializeField] private TilemapTileRuleDefinition<TileTerrainDefinition>[] terrainRules;
+        
+        [SerializeField] [FormerlySerializedAs("Roads")] private Tilemap roadsTilemap;
+        [SerializeField] private TilemapPartedTileRuleDefinition<TileRoadDefinition>[] roadsRules;
 
         public string json;
 
         private GameSession _session;
         private TilemapProcessor _processor;
+
+        private const float TickTime = 1f;
+        private float _deltaTime = 0f;
 
         private void Start()
         {
@@ -26,7 +32,7 @@ namespace IdleTycoon.Scripts
 
         private void Update()
         {
-            MainLoop(1);
+            MainLoop(Time.deltaTime);
         }
 
         private void OnDestroy()
@@ -48,16 +54,24 @@ namespace IdleTycoon.Scripts
             
             SessionTileProvider sessionTiles = new(context.worldMap);
 
-            TilemapSubProcessor<TileTerrainDefinition> terrainSubProcessor = new(terrainTilemap, sessionTiles, terrainRules);
+            TilemapTileProcessor<TilemapTileRuleDefinition<TileTerrainDefinition>, TileTerrainDefinition> terrainProcessor =
+                new(terrainTilemap, sessionTiles, terrainRules, t => t.weight);
+            TilemapPartedTileProcessor<TilemapPartedTileRuleDefinition<TileRoadDefinition>, TileRoadDefinition> roadProcessor = 
+                new(roadsTilemap, sessionTiles, roadsRules, t => t.weight);
 
-            _processor = new TilemapProcessor(context, terrainSubProcessor);
+            _processor = new TilemapProcessor(context, terrainProcessor, roadProcessor);
         }
-
-        private void MainLoop(int ticks)
+        
+        private void MainLoop(float deltaTime)
         {
-            for(int t = 0; t < ticks; t++)
-                _session.Tick();
+            _deltaTime += deltaTime;
 
+            while (_deltaTime >= TickTime)
+            {
+                _session.Tick();
+                _deltaTime -= TickTime;
+            }
+            
             int toResolveTilesCount = _processor.UpdateTiles(100);
 
             if (toResolveTilesCount > 0)

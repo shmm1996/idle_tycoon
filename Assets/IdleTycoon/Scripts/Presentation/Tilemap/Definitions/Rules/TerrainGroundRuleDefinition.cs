@@ -8,12 +8,12 @@ using UnityEngine;
 
 namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
 {
-    [CreateAssetMenu(fileName = "GroundRule", menuName = "Definitions/TileMap/Rules/GroundRule", order = 0)]
-    public class TerrainGroundRuleDefinition : TilemapRuleDefinition<TileTerrainDefinition>
+    [CreateAssetMenu(fileName = "GroundRule", menuName = "Definitions/TileMap/Rules/Terrain/GroundRule", order = 0)]
+    public class TerrainGroundRuleDefinition : TilemapTileRuleDefinition<TileTerrainDefinition>
     {
         public override IEnumerable<int2> DependentOnTileOffsets { get; } = Array.Empty<int2>();
 
-        public override bool IsValid() => target && target.Data.isGround;
+        public override bool IsValid() => target;
 
         public override bool IsMatch(int2 tile, SessionTileProvider provider) => provider.HasAttribute(tile, TileAttributeFlag.IsGround);
     }

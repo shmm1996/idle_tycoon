@@ -3,9 +3,9 @@ using System;
 namespace IdleTycoon.Scripts.Data.Serialization.Models
 {
     [Serializable]
-    public class Chunk8X8TileAttributeFlags
+    public sealed class Chunk8X8TileAttributeFlags
     {
-        public int id;
+        public int flag;
         public ulong value;
     }
 }

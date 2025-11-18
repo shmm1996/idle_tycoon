@@ -2,27 +2,32 @@ using System;
 using System.Collections.Generic;
 using IdleTycoon.Scripts.CustomEditor.Attributes;
 using IdleTycoon.Scripts.Data.Enums;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles
 {
-    public abstract class TileDefinition : ScriptableObject
+    public abstract class TileDefinitionBase<TTileView> : ScriptableObject
+        where TTileView : struct
     {
         [SerializeField, FormerlySerializedAs("name")] protected string tileName;
         
         public string Name => tileName;
         
-        [SerializeField] protected TileView[] tiles;
+        [SerializeField] protected TTileView[] tiles;
         
-        public IEnumerable<TileView> Tiles => tiles;
-        
+        public IEnumerable<TTileView> Tiles => tiles;
+    }
+    
+    public abstract class TileDefinition : TileDefinitionBase<TileDefinition.TileView>
+    {
         [Serializable]
         public struct TileView
         {
             public TileBase tile;
-            public byte weight;
+            public int weight;
             public Transformation transformation;
             
             [Serializable]
@@ -36,16 +41,34 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles
 
                 public int RotationFlags => (int)rotationFlags & 0b1111;
                 
-                public int FlipFlags => (int)flipFlags & 0b111;
+                public int FlipFlags => (int)flipFlags & 0b1111;
             }
         }
     }
     
-    public abstract class TileDefinition<TData> : TileDefinition
-        where TData : struct
+    public abstract class PartedTileDefinition : TileDefinitionBase<PartedTileDefinition.PartedTileView>
     {
-        [SerializeField] protected TData data;
+        [Serializable]
+        public struct PartedTileView
+        {
+            public SubTileView[] views;
+            public int weight;
+        }
         
-        public TData Data => data;
+        [Serializable]
+        public struct SubTileView
+        {
+            public TileBase tile;
+            public int2 offset;
+            public int weight;
+            public Transformation transformation;
+            
+            [Serializable]
+            public struct Transformation
+            {
+                public TileTransformation.Rotation rotation;
+                public TileTransformation.Flip flip;
+            }
+        }
     }
 }

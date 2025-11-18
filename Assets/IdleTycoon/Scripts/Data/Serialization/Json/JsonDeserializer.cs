@@ -11,6 +11,8 @@ namespace IdleTycoon.Scripts.Data.Serialization.Json
 {
     public static class JsonDeserializer
     {
+        private const int SerializableTileAttributesMask = (int)TileAttributeFlag.IsGround | (int)TileAttributeFlag.IsRoad;
+        
         public static unsafe Session.WorldMap* DeserializeWorldMap(string json)
         {
             var worldMap = JsonUtility.FromJson<WorldMap>(json);
@@ -38,15 +40,15 @@ namespace IdleTycoon.Scripts.Data.Serialization.Json
         private static unsafe void SetChunkTileAttributeFlags(Session.WorldMap* sessionWorldMap, Chunk8X8 chunk)
         {
             Session.Chunk8X8* sessionChunk = sessionWorldMap->GetChunk(chunk.position.ToInt2());
-            foreach (Chunk8X8TileAttributeFlags chunkTileAttribute in chunk.tileAttributeFlags)
+            foreach (Chunk8X8TileAttributeFlags chunkTileAttribute in chunk.tileAttributes)
             {
-                if (!IsSerializable((TileAttributeFlag)chunkTileAttribute.id)) continue;
-                sessionChunk->SetChunkTileAttributeFlag(chunkTileAttribute.id, chunkTileAttribute.value);
+                if (!IsSerializable(chunkTileAttribute.flag)) continue;
+                sessionChunk->SetChunkTileAttributeFlag(chunkTileAttribute.flag, chunkTileAttribute.value);
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool IsSerializable(TileAttributeFlag flag) => flag == TileAttributeFlag.IsGround;
+        private static bool IsSerializable(int tileAttribute) => (tileAttribute & SerializableTileAttributesMask) != 0;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe void SetChunkTileEntities(Session.WorldMap* sessionWorldMap, TileEntity[] entities)

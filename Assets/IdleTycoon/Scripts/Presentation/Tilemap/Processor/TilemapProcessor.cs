@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using IdleTycoon.Scripts.Data.Session;
-using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
 using IdleTycoon.Scripts.Utils;
 using R3;
 using Unity.Mathematics;
@@ -10,14 +9,14 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
 {
     public sealed class TilemapProcessor : IDisposable
     {
-        private readonly TilemapSubProcessor<TileTerrainDefinition>[] _subProcessors;
+        private readonly ITilemapSubProcessor[] _processors;
         private readonly CompositeDisposable _disposables;
 
         private readonly HashQueue<int2> _toResolve;
 
-        public TilemapProcessor(GameSession.Context context, params TilemapSubProcessor<TileTerrainDefinition>[] subProcessors)
+        public TilemapProcessor(GameSession.Context context, params ITilemapSubProcessor[] processors)
         {
-            _subProcessors = subProcessors;
+            _processors = processors;
             _disposables = new CompositeDisposable();
 
             _toResolve = new HashQueue<int2>();
@@ -49,24 +48,24 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
 
         public int UpdateTiles(int limit)
         {
-            if (_subProcessors.Length == 0) return _toResolve.Count;
+            if (_processors.Length == 0) return _toResolve.Count;
 
             HashSet<int2> processed = new(limit);
             for (int i = 0; i < limit && _toResolve.Count > 0; i++)
             {
                 if (!_toResolve.TryDequeue(out int2 tile)) break;
                 processed.Add(tile);
-                foreach (TilemapSubProcessor<TileTerrainDefinition> subProcessor in _subProcessors)
+                foreach (ITilemapSubProcessor processor in _processors)
                 {
-                    if (!subProcessor.TryLazyResolveTile(tile)) continue;
-                    foreach (int2 affected in subProcessor.GetAffectedTiles(tile))
+                    if (!processor.TryLazyResolveTile(tile)) continue;
+                    foreach (int2 affected in processor.GetAffectedTiles(tile))
                         if (!processed.Contains(affected))
                             _toResolve.Enqueue(affected);
                 }
             }
 
-            foreach (TilemapSubProcessor<TileTerrainDefinition> subProcessor in _subProcessors)
-                subProcessor.Apply();
+            foreach (ITilemapSubProcessor processor in _processors)
+                processor.Apply();
             
             return _toResolve.Count;
         }

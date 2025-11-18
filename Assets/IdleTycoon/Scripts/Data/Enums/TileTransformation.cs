@@ -21,6 +21,7 @@ namespace IdleTycoon.Scripts.Data.Enums
             None = 1,
             Vertical = 1 << 1,
             Horizontal = 1 << 2,
+            Both = 1 << 3
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -41,6 +42,7 @@ namespace IdleTycoon.Scripts.Data.Enums
                 Flip.None => Matrix4x4.identity,
                 Flip.Vertical => Matrix4x4.Scale(new Vector3(-1, 1, 1)),
                 Flip.Horizontal => Matrix4x4.Scale(new Vector3(1, -1, 1)),
+                Flip.Both => Matrix4x4.Scale(new Vector3(-1, -1, 1)),
                 _ => throw new ArgumentOutOfRangeException(nameof(flip), flip, null)
             };
     }

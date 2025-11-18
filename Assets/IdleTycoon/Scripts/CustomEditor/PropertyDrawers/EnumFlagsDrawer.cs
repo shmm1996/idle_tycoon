@@ -6,7 +6,7 @@ using UnityEngine;
 namespace IdleTycoon.Scripts.CustomEditor.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(EnumFlagsAttribute))]
-    public class EnumFlagsDrawer : PropertyDrawer
+    public sealed class EnumFlagsDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

@@ -6,8 +6,7 @@ using UnityEngine;
 
 namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
 {
-    public abstract class TilemapRuleDefinition<TTarget> : ScriptableObject
-        where TTarget : TileDefinition 
+    public abstract class TilemapRuleDefinitionBase<TTarget> : ScriptableObject
     {
         [SerializeField] protected TTarget target;
         
@@ -22,5 +21,17 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
         public abstract bool IsValid();
 
         public abstract bool IsMatch(int2 tile, SessionTileProvider provider);
+    }
+    
+    public abstract class TilemapTileRuleDefinition<TTarget> : TilemapRuleDefinitionBase<TTarget>
+        where TTarget : TileDefinition
+    {
+
+    }
+    
+    public abstract class TilemapPartedTileRuleDefinition<TTarget> : TilemapRuleDefinitionBase<TTarget>
+        where TTarget : PartedTileDefinition
+    {
+        public abstract int2 TileToSubTile(int2 tile);
     }
 }

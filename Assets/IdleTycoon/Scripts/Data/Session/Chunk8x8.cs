@@ -10,7 +10,8 @@ namespace IdleTycoon.Scripts.Data.Session
         private const int TileFlagsCount = 8;
         
         public readonly int2 position;
-        private readonly ulong* _tileAttributeBitFlags; //0 - ground ... n - building, k - road ...
+        private readonly ulong* _tileAttributeBitFlags; //[1] - ground ... n - building, k - road ... 
+        //TODO: [0] not uses, cause enum TileAttributeFlag uses as bit flag. 
         //public chunk_biome
         //public chunk_temperature
         

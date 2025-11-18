@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 624039b96ffc4792a7b6853cc7fbd6bd, type: 3}
-  m_Name: CoastlineRule
+  m_Script: {fileID: 11500000, guid: 976c8ef999e94949b03e24ac5b0622be, type: 3}
+  m_Name: DeadEndRight
   m_EditorClassIdentifier: 
-  target: {fileID: 11400000, guid: 4aa425703aa5f211bb5c3376d62ad7b5, type: 2}
+  target: {fileID: 11400000, guid: b681d3635fe4d6261b9a64d69429667d, type: 2}
   priority: 99
-  topTile: {fileID: 11400000, guid: e5ed2565c1b8e33c285270587491add9, type: 2}
+  isRoadNeighborFlags: 16
+  isNotRoadNeighborFlags: 74
