@@ -14,8 +14,14 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
         [SerializeField, EnumFlags] private TileRoad.Neighbour isRoadNeighborFlags;
         [SerializeField, EnumFlags] private TileRoad.Neighbour isNotRoadNeighborFlags;
 
-        public override IEnumerable<int2> DependentOnTileOffsets
+        public override IEnumerable<int2> DependentOnTileOffsets { get; } = new[]
         {
+            TileRoad.Neighbour.Up.ToOffset(),
+            TileRoad.Neighbour.Down.ToOffset(),
+            TileRoad.Neighbour.Left.ToOffset(),
+            TileRoad.Neighbour.Right.ToOffset()
+        };
+        /*{
             get
             {
                 int mask = (int)isRoadNeighborFlags & (int)isNotRoadNeighborFlags;
@@ -26,9 +32,12 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
                         yield return ((TileRoad.Neighbour)bit).ToOffset();
                 }
             }
-        }
+        }*/
 
-        public override bool IsValid() => target && ((int)isRoadNeighborFlags & (int)isNotRoadNeighborFlags & 0b11111111) == 0;
+        public override bool IsValid() =>
+            target &&
+            ((int)isRoadNeighborFlags & (int)isNotRoadNeighborFlags & 0b11111111) == 0 &&
+            (((int)isRoadNeighborFlags | (int)isNotRoadNeighborFlags) & 0b1011010) == 0b1011010;//TODO: now only up/down/left/right.
 
         public override bool IsMatch(int2 tile, SessionTileProvider provider)
         {

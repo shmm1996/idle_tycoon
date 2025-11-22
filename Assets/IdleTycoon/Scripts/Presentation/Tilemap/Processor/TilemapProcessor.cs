@@ -51,12 +51,13 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
             if (_processors.Length == 0) return _toResolve.Count;
 
             HashSet<int2> processed = new(limit);
-            for (int i = 0; i < limit && _toResolve.Count > 0; i++)
+            for (int i = 0; i < limit && _toResolve.Count > 0;)
             {
                 if (!_toResolve.TryDequeue(out int2 tile)) break;
                 processed.Add(tile);
                 foreach (ITilemapSubProcessor processor in _processors)
                 {
+                    i++;
                     if (!processor.TryLazyResolveTile(tile)) continue;
                     foreach (int2 affected in processor.GetAffectedTiles(tile))
                         if (!processed.Contains(affected))

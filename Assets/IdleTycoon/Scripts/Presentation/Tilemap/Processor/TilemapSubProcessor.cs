@@ -43,14 +43,18 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
             _rules = rules;
             
             tileNames = new string[sessionTiles.WorldMapSize.x, sessionTiles.WorldMapSize.y];
+            
+#if UNITY_EDITOR
+            rules.Where(r => !r.IsValid()).ToList().ForEach(r => 
+                Debug.LogWarning($"[{r.GetType().Name}.{nameof(r.IsValid)}] Invalid tilemap rule definition."));
+            
+            rules.GroupBy(r => r.Target.name, r=> r)
+                .Where(rg => rg.Count() > 1).Select(rg => rg.First()).ToList().ForEach(r =>
+                    Debug.LogError($"[{r.GetType().Name}.{nameof(r.Target)}.{nameof(r.Target.Name)}] Equal names on different tiles definitions."));
+#endif
+            
             tileViewWeightedSets = rules
-                .Where(r =>
-                {
-                    bool isValid = r.IsValid();
-                    if(isValid) return true;
-                    Debug.LogWarning($"[{r.GetType().Name}.{nameof(r.IsValid)}] Invalid tilemap rule definition.");
-                    return false;
-                })
+                .Where(r => r.IsValid())
                 .ToDictionary(
                     r => r.Target.Name,
                     r => new WeightedSet<TTileView>(

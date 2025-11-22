@@ -72,7 +72,7 @@ namespace IdleTycoon.Scripts
                 _deltaTime -= TickTime;
             }
             
-            int toResolveTilesCount = _processor.UpdateTiles(100);
+            int toResolveTilesCount = _processor.UpdateTiles(500);
 
             if (toResolveTilesCount > 0)
                 Debug.LogWarning($"[{nameof(MainLoop)}] Tiles left to resolve: {toResolveTilesCount}.");

@@ -29,6 +29,8 @@ namespace IdleTycoon.Scripts.Data.Systems
                 {
                     case TerrainCommand.Ground.Set c: OnTerrainGroundSet(c); break;
                     case TerrainCommand.Ground.Remove c: OnTerrainGroundRemove(c); break;
+                    case RoadCommand.Set c: OnRoadSet(c); break;
+                    case RoadCommand.Remove c: OnRoadRemove(c); break;
                 }
         }
     }

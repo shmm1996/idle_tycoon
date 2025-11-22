@@ -7,11 +7,11 @@ namespace IdleTycoon.Scripts.Data.Systems
     public unsafe partial class CommandProcessor
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void OnTerrainGroundSet(TerrainCommand.Ground.Set command)
+        private void OnRoadSet(RoadCommand.Set command)
         {
             int2 tile = command.tile;
             
-            if (!_worldMap->TrySetTerrainGround(tile, out ulong flags)) return;
+            if (!_worldMap->TrySetRoad(tile, out ulong flags)) return;
             
             //TODO: scan flags and marl for validation;
             
@@ -19,11 +19,11 @@ namespace IdleTycoon.Scripts.Data.Systems
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void OnTerrainGroundRemove(TerrainCommand.Ground.Remove command)
+        private void OnRoadRemove(RoadCommand.Remove command)
         {
             int2 tile = command.tile;
             
-            if (!_worldMap->TryRemoveTerrainGround(tile, out ulong flags)) return;
+            if (!_worldMap->TryRemoveRoad(tile, out ulong flags)) return;
             
             //TODO: scan flags and marl for validation;
             
