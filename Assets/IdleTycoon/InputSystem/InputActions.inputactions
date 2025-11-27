@@ -1,0 +1,67 @@
+{
+    "version": 1,
+    "name": "InputActions",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "a765f776-9882-4655-b4da-74511c1c2bcf",
+            "actions": [
+                {
+                    "name": "Point (Vector2)",
+                    "type": "Value",
+                    "id": "6be255cb-8194-4a3d-8a82-c7f9a69f4373",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Click (Button)",
+                    "type": "Button",
+                    "id": "0d84ae64-a835-46da-b7ec-7f18b3612069",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "cd992e21-1d5a-4523-973a-7f1f6ace050a",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Mouse",
+                    "action": "Point (Vector2)",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "92074690-0dc8-4057-95fe-3b099d2a5b30",
+                    "path": "<Pointer>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Mouse",
+                    "action": "Click (Button)",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Mouse",
+            "bindingGroup": "Mouse",
+            "devices": [
+                {
+                    "devicePath": "<VirtualMouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
