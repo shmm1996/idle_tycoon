@@ -4,14 +4,24 @@ namespace IdleTycoon.Scripts.Data.Commands
 {
     public struct RoadCommand
     {
-        public struct Set : IGameCommand
+        public readonly struct Set : IGameCommand
         {
-            public int2 tile;
+            public readonly int2 tile;
+
+            public Set(int2 tile)
+            {
+                this.tile = tile;
+            }
         }
 
-        public struct Remove : IGameCommand
+        public readonly struct Remove : IGameCommand
         {
-            public int2 tile;
+            public readonly int2 tile;
+
+            public Remove(int2 tile)
+            {
+                this.tile = tile;
+            }
         }
     }
 }

@@ -16,18 +16,16 @@ namespace IdleTycoon.Scripts.Data.Session
         private FastPool<Building> _buildings;
         private NativeHashMap<int2, int> _tileToBuilding;
         
-        public int2 Size => _size;
-        
         public WorldMap(int2 size)
         {
-            _size = size;
+            this._size = size;
             
             int chunksSize = size.x * size.y * sizeof(Chunk8X8);
             _chunks = (Chunk8X8*)UnsafeUtility.Malloc(chunksSize, 64, Allocator.Persistent);
             UnsafeUtility.MemClear(_chunks, chunksSize);
-            for(int y = 0; y < _size.y; y++)
-            for(int x = 0; x < _size.x; x++)
-                _chunks[x + y * _size.x] = new Chunk8X8(new int2(x, y));
+            for(int y = 0; y < this._size.y; y++)
+            for(int x = 0; x < this._size.x; x++)
+                _chunks[x + y * this._size.x] = new Chunk8X8(new int2(x, y));
             
             _buildings = new FastPool<Building>();
             _tileToBuilding = new NativeHashMap<int2, int>(_buildings.Capacity, Allocator.Persistent);
@@ -67,20 +65,36 @@ namespace IdleTycoon.Scripts.Data.Session
             _buildings.Remove(id);
             //TODO:  Add chunk.tileAttributeFlag(position, (int)TileAttributeFlag.Building).
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool HasAttribute(int2 tile, int attribute) =>
+            GetTilesChunk(tile)->IsExistTileAttributeFlag(Chunk8X8Utils.ToIndexFromGlobal(tile), attribute);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool HasTile(int2 tile) => tile.x >= 0 &&  tile.x < _size.x && tile.y >= 0 && tile.y < _size.y;
         
         public readonly struct ReadOnly
         {
             private readonly WorldMap* _worldMap;
-            
-            public int2 Size => _worldMap->_size;
+            public readonly int2 size;
 
-            public ReadOnly(WorldMap* worldMap) => _worldMap = worldMap;
-            
+            public ReadOnly(WorldMap* worldMap)
+            {
+                _worldMap = worldMap;
+                size = worldMap->_size;
+            }
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public Chunk8X8.ReadOnly GetChunk(int2 chunk) => new(_worldMap->GetChunk(chunk));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public Chunk8X8.ReadOnly GetTilesChunk(int2 tile) => new(_worldMap->GetTilesChunk(tile));
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public bool HasTile(int2 tile) => _worldMap->HasTile(tile);
+            
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public bool HasAttribute(int2 tile, int attribute) => _worldMap->HasAttribute(tile, attribute);
         }
     }
 }

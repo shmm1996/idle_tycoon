@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using IdleTycoon.Scripts.CustomEditor.Attributes;
 using IdleTycoon.Scripts.Data.Enums;
+using IdleTycoon.Scripts.Data.Session;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
-using IdleTycoon.Scripts.Presentation.Tilemap.Processor;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -39,9 +39,9 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
             ((int)isRoadNeighborFlags & (int)isNotRoadNeighborFlags & 0b11111111) == 0 &&
             (((int)isRoadNeighborFlags | (int)isNotRoadNeighborFlags) & 0b1011010) == 0b1011010;//TODO: now only up/down/left/right.
 
-        public override bool IsMatch(int2 tile, SessionTileProvider provider)
+        public override bool IsMatch(int2 tile, WorldMap.ReadOnly worldMap)
         {
-            if (!provider.HasAttribute(tile, TileAttributeFlag.IsRoad)) return false;
+            if (!worldMap.HasAttribute(tile, (int)TileAttributeFlag.IsRoad)) return false;
 
             int isRoadMask = (int)isRoadNeighborFlags;
             int isNotRoadMask = (int)isNotRoadNeighborFlags;
@@ -52,13 +52,13 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
                 {
                     var neighbour = (TileRoad.Neighbour)bit;
                     int2 nextTile = tile + neighbour.ToOffset();
-                    if (!provider.OnWorldMap(nextTile) || !provider.HasAttribute(nextTile, TileAttributeFlag.IsRoad)) return false;
+                    if (!worldMap.HasTile(nextTile) || !worldMap.HasAttribute(nextTile, (int)TileAttributeFlag.IsRoad)) return false;
                 }
                 else if ((isNotRoadMask & bit) != 0)
                 {
                     var neighbour = (TileRoad.Neighbour)bit;
                     int2 nextTile = tile + neighbour.ToOffset();
-                    if (provider.OnWorldMap(nextTile) && provider.HasAttribute(nextTile, TileAttributeFlag.IsRoad)) return false;
+                    if (worldMap.HasTile(nextTile) && worldMap.HasAttribute(nextTile, (int)TileAttributeFlag.IsRoad)) return false;
                 }
             }
 

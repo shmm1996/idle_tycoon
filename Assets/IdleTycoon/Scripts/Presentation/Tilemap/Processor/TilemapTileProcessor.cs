@@ -1,5 +1,6 @@
 using System;
 using IdleTycoon.Scripts.Data.Enums;
+using IdleTycoon.Scripts.Data.Session;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
 using IdleTycoon.Scripts.Utils;
@@ -14,10 +15,10 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
     {
         public TilemapTileProcessor(
             UnityEngine.Tilemaps.Tilemap tilemap, 
-            SessionTileProvider sessionTiles, 
+            GameSession.Context context, 
             TRuleDefinition[] rules, 
             Func<TileDefinition.TileView, int> getWeight) 
-            : base(tilemap, sessionTiles, rules, getWeight)
+            : base(tilemap, context, rules, getWeight)
         {
         }
 

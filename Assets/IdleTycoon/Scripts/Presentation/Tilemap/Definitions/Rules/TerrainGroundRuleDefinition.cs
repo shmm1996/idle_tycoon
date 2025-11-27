@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using IdleTycoon.Scripts.Data.Enums;
+using IdleTycoon.Scripts.Data.Session;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
-using IdleTycoon.Scripts.Presentation.Tilemap.Processor;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -15,6 +15,6 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
 
         public override bool IsValid() => target;
 
-        public override bool IsMatch(int2 tile, SessionTileProvider provider) => provider.HasAttribute(tile, TileAttributeFlag.IsGround);
+        public override bool IsMatch(int2 tile, WorldMap.ReadOnly worldMap) => worldMap.HasAttribute(tile, (int)TileAttributeFlag.IsGround);
     }
 }

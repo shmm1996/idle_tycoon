@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using IdleTycoon.Scripts.Data.Session;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
-using IdleTycoon.Scripts.Presentation.Tilemap.Processor;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -20,7 +20,7 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
 
         public abstract bool IsValid();
 
-        public abstract bool IsMatch(int2 tile, SessionTileProvider provider);
+        public abstract bool IsMatch(int2 tile, WorldMap.ReadOnly worldMap);
     }
     
     public abstract class TilemapTileRuleDefinition<TTarget> : TilemapRuleDefinitionBase<TTarget>

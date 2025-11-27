@@ -21,9 +21,9 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
 
             _toResolve = new HashQueue<int2>();
             
-            context.observables.OnTilesUpdated.Subscribe(OnTilesUpdated).AddTo(_disposables);
-            context.observables.OnTilesCleaned.Subscribe(OnTilesCleaned).AddTo(_disposables);
-            context.observables.OnWorldLoaded.Subscribe(OnWorldMapLoaded).AddTo(_disposables);
+            context.Observables.OnTilesUpdated.Subscribe(OnTilesUpdated).AddTo(_disposables);
+            context.Observables.OnTilesCleaned.Subscribe(OnTilesCleaned).AddTo(_disposables);
+            context.Observables.OnWorldLoaded.Subscribe(OnWorldMapLoaded).AddTo(_disposables);
         }
 
         public void Dispose() => _disposables.Dispose();
@@ -41,8 +41,8 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
 
         private void OnWorldMapLoaded(WorldMap.ReadOnly worldMap)
         {
-            for (int x = 0; x < worldMap.Size.x; x++)
-            for (int y = 0; y < worldMap.Size.y; y++)
+            for (int x = 0; x < worldMap.size.x; x++)
+            for (int y = 0; y < worldMap.size.y; y++)
                 _toResolve.Enqueue(new int2(x, y));
         }
 

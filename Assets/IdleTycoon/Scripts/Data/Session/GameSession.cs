@@ -1,4 +1,5 @@
 using System;
+using IdleTycoon.Scripts.Data.Commands;
 using IdleTycoon.Scripts.Data.Systems;
 using IdleTycoon.Scripts.Utils;
 using R3;
@@ -11,13 +12,15 @@ namespace IdleTycoon.Scripts.Data.Session
     public unsafe class GameSession : IDisposable
     {
         private WorldMap* _worldMap;
+        private WorldMap.ReadOnly _worldMapReadOnly;
         private readonly Subjects _subjects = new();
         private readonly ISystem[] _systems;
         
-        public readonly CommandsQueue commands = new();
+        public readonly ReplaySubject<IGameCommand> onGameCommand = new(100);
         public readonly HashQueue<int2> toUpdate = new();
         
         public WorldMap* WorldMap => _worldMap;
+        public WorldMap.ReadOnly WorldMapReadOnly => _worldMapReadOnly;
 
         public GameSession()
         {
@@ -46,6 +49,7 @@ namespace IdleTycoon.Scripts.Data.Session
         {
             DisposeWorldMap();
             _worldMap = worldMap;
+            _worldMapReadOnly = new WorldMap.ReadOnly(_worldMap);
             
             _subjects.onWorldLoaded.OnNext(new WorldMap.ReadOnly(this._worldMap));
         }
@@ -64,15 +68,15 @@ namespace IdleTycoon.Scripts.Data.Session
         
         public sealed class Context
         {
-            public readonly WorldMap.ReadOnly worldMap;
-            public readonly Subjects.Observables observables;
-            public readonly CommandsQueue.Enqueuer commands;
+            private readonly GameSession _session;
+            
+            public Subjects.Observables Observables { get; }
+            public WorldMap.ReadOnly WorldMap => _session._worldMapReadOnly;
 
             public Context(GameSession session)
             {
-                worldMap = new WorldMap.ReadOnly(session._worldMap);
-                observables = new Subjects.Observables(session._subjects);
-                commands = session.commands.GetEnqueuer();
+                _session = session;
+                Observables = new Subjects.Observables(session._subjects);
             }
         }
         

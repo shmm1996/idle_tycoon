@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using IdleTycoon.Scripts.Data.Session;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
 using IdleTycoon.Scripts.Utils;
@@ -17,7 +18,7 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
         where TTileView : struct
     {
         private readonly UnityEngine.Tilemaps.Tilemap _tilemap;
-        private readonly SessionTileProvider _sessionTiles;
+        private readonly GameSession.Context _context;
         private readonly TRuleDefinition[] _rules;
         
         private readonly TRuleDefinition[] _matchedBuffer;
@@ -34,15 +35,15 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
 
         protected TilemapSubProcessor(
             UnityEngine.Tilemaps.Tilemap tilemap, 
-            SessionTileProvider sessionTiles, 
+            GameSession.Context context, 
             TRuleDefinition[] rules,
             Func<TTileView, int> getWeight)
         {
             _tilemap = tilemap;
-            _sessionTiles = sessionTiles;
+            _context = context;
             _rules = rules;
             
-            tileNames = new string[sessionTiles.WorldMapSize.x, sessionTiles.WorldMapSize.y];
+            tileNames = new string[context.WorldMap.size.x, context.WorldMap.size.y];
             
 #if UNITY_EDITOR
             rules.Where(r => !r.IsValid()).ToList().ForEach(r => 
@@ -100,7 +101,7 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
                 var key = (tile, rule);
                 var isMatch = _matchCache.TryGetValue(key, out bool cached)
                     ? cached
-                    : _matchCache[key] = rule.IsMatch(tile, _sessionTiles);
+                    : _matchCache[key] = rule.IsMatch(tile, _context.WorldMap);
 
                 if (isMatch)
                     _matchedBuffer[matchedCount++] = rule;
@@ -116,7 +117,7 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
             foreach (int2 offset in dependentOnTileOffsets)
             {
                 int2 t = tile - offset;
-                if (_sessionTiles.OnWorldMap(t))
+                if (_context.WorldMap.HasTile(t))
                     _affectedBuffer[count++] = t;
             }
 
