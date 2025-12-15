@@ -18,7 +18,7 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
         {
             if (_isSelecting) return;
 
-            Preview = new[] { new TilePreview(tile, true, TilePreviewProjection.Default) };
+            Preview = new[] { new TilePreview(tile, true, TilePreviewStyle.Default) };
 
             Debug.Log($"[BrushDebugArea] Hover at {tile}");
         }
@@ -48,27 +48,30 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
         {
             if (!_isSelecting) return;
 
-            _end = tile;
-            UpdateAreaPreview();
             _isSelecting = false;
+            _start = tile;
+            _end = tile;
+
+            UpdateAreaPreview();
 
             Debug.Log($"[BrushDebugArea] PrimaryUp at {tile}");
-            Debug.Log($"[BrushDebugArea] Final area contains {Preview.Count()} tiles");
+            Debug.Log($"[BrushDebugArea] Final area contains {Preview.Length} tiles");
         }
 
         public override void Cancel()
         {
             _isSelecting = false;
-            Preview = Array.Empty<TilePreview>();
+            ClearAreaPreview();
 
             Debug.Log("[BrushDebugArea] Cancel");
         }
 
-        private void UpdateAreaPreview()
-        {
+        private void UpdateAreaPreview() =>
             Preview = RectUtils.GetRectEnumerable(_start, _end)
-                .Select(tile => new TilePreview(tile, true, TilePreviewProjection.Default))
+                .Select(tile => new TilePreview(tile, true, TilePreviewStyle.Default))
                 .ToArray();
-        }
+
+        private void ClearAreaPreview() =>
+            Preview = Array.Empty<TilePreview>();
     }
 }

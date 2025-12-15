@@ -8,16 +8,20 @@ using UnityEngine.Tilemaps;
 
 namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.PreviewProjection
 {
-    [CreateAssetMenu(fileName = "TilePreviewProjection(N)", menuName = "Definitions/TileMap/TilesPreviewProjection", order = 0)]
+    [CreateAssetMenu(fileName = "TilePreview (N)", menuName = "Definitions/TileMap/TilePreviews", order = 0)]
     public class TilePreviewDefinition : ScriptableObject
     {
         [SerializeField, FormerlySerializedAs("name")] private string tileName;
         
         public string Name => tileName;
         
-        [SerializeField] private TilePreviewProjection projection;
+        [SerializeField] private TilePreviewStyle style;
         
-        public TilePreviewProjection Projection => projection;
+        public TilePreviewStyle Style => style;
+        
+        [SerializeField] private bool isValid;
+        
+        public bool IsValid => isValid;
         
         [SerializeField] protected TileView view;
         
@@ -28,19 +32,13 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.PreviewProjection
         {
             public TileBase tile;
             public Transformation transformation;
+            //public Color color;
             
             [Serializable]
             public struct Transformation
             {
-                [SerializeField, FormerlySerializedAs("rotation"), EnumFlags]
-                private TileTransformation.Rotation rotationFlags;
-
-                [SerializeField, FormerlySerializedAs("flip"), EnumFlags]
-                private TileTransformation.Flip flipFlags;
-
-                public int RotationFlags => (int)rotationFlags & 0b1111;
-                
-                public int FlipFlags => (int)flipFlags & 0b1111;
+                public TileTransformation.Rotation rotation;
+                public TileTransformation.Flip flip;
             }
         }
     }

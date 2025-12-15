@@ -9,17 +9,18 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
     public sealed class BrushDebug : Brush
     {
         private bool _pressed;
-
+        
         public override void Hover(int2 tile)
         {
+            UpdateAreaPreview(tile);
+            
             Debug.Log($"[BrushDebug] Hover at {tile}");
-
-            Preview = new[] { new TilePreview(tile, true, TilePreviewProjection.Default) };
         }
 
         public override void PrimaryDown(int2 tile)
         {
             _pressed = true;
+            
             Debug.Log($"[BrushDebug] PrimaryDown at {tile}");
         }
 
@@ -35,15 +36,30 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
             if (!_pressed) return;
 
             _pressed = false;
+            
             Debug.Log($"[BrushDebug] PrimaryUp at {tile}");
         }
 
         public override void Cancel()
         {
-            Debug.Log("[BrushDebug] Cancel()");
             _pressed = false;
 
-            Preview = Array.Empty<TilePreview>();
+            ClearAreaPreview();
+            
+            Debug.Log("[BrushDebug] Cancel()");
         }
+
+        private void UpdateAreaPreview(int2 tile)
+        {
+            TilePreview preview = new(tile, true, TilePreviewStyle.Default);
+
+            if (Preview.Length == 1)
+                Preview[0] = preview;
+            else
+                Preview = new[] { preview };
+        }
+
+        private void ClearAreaPreview() =>
+            Preview = Array.Empty<TilePreview>();
     }
 }

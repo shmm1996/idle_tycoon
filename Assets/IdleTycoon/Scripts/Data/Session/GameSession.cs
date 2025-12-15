@@ -16,11 +16,9 @@ namespace IdleTycoon.Scripts.Data.Session
         private readonly Subjects _subjects = new();
         private readonly ISystem[] _systems;
         
-        public readonly ReplaySubject<IGameCommand> onGameCommand = new(100);
         public readonly HashQueue<int2> toUpdate = new();
         
         public WorldMap* WorldMap => _worldMap;
-        public WorldMap.ReadOnly WorldMapReadOnly => _worldMapReadOnly;
 
         public GameSession()
         {
@@ -41,9 +39,12 @@ namespace IdleTycoon.Scripts.Data.Session
             
             _worldMap->Dispose();
             UnsafeUtility.Free(_worldMap, Allocator.Persistent);
+            _worldMapReadOnly = default;
         }
         
         public Context GetContext() => new(this);
+
+        public CommandsBus GetCommandsBus() => new(this);
 
         public void LoadWorldMap(WorldMap* worldMap)
         {
@@ -51,7 +52,7 @@ namespace IdleTycoon.Scripts.Data.Session
             _worldMap = worldMap;
             _worldMapReadOnly = new WorldMap.ReadOnly(_worldMap);
             
-            _subjects.onWorldLoaded.OnNext(new WorldMap.ReadOnly(this._worldMap));
+            _subjects.onWorldLoaded.OnNext(new WorldMap.ReadOnly(_worldMap));
         }
 
         public void Init()
@@ -79,6 +80,20 @@ namespace IdleTycoon.Scripts.Data.Session
                 Observables = new Subjects.Observables(session._subjects);
             }
         }
+        
+#region CommandBus //TODO: Move into inner class.
+        private readonly ReplaySubject<IGameCommand> _onGameCommand = new(100);
+        public Observable<IGameCommand> OnGameCommand => _onGameCommand;
+        
+        public sealed class CommandsBus
+        {
+            private readonly GameSession _session;
+            
+            public CommandsBus(GameSession session) => _session = session;
+
+            public void OnNext(IGameCommand command) => _session._onGameCommand.OnNext(command);
+        }
+#endregion
         
         public sealed class Subjects
         {

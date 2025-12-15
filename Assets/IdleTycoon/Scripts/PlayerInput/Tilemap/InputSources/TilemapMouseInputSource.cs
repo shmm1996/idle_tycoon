@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine.InputSystem;
 
 namespace IdleTycoon.Scripts.PlayerInput.Tilemap.InputSources
 {
-    public sealed class MouseInputSource
+    public sealed class MouseInputSource : IDisposable
     {
         private readonly Camera _camera;
         private readonly InputController _controller;
@@ -40,10 +41,8 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.InputSources
 
         public void Update()
         {
-            if (!IsReady()) return;
-            
-            int2 tile = GetTileUnderMouse();
-
+            if (!Application.isFocused || !TryGetTileUnderMouse(out int2 tile)) return;
+ 
             _controller.Process(new InputEvent(InputEvent.Type.Hover, tile));
 
             var press = _pointerPressed.ReadValue<float>();
@@ -66,18 +65,19 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.InputSources
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool IsReady() =>
-            Application.isFocused &&
-            _camera.pixelRect.Contains(_pointerPosition.ReadValue<Vector2>());
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private int2 GetTileUnderMouse()
+        private bool TryGetTileUnderMouse(out int2 tile)
         {
             Vector2 screen = _pointerPosition.ReadValue<Vector2>();
-            Vector3 world = _camera.ScreenToWorldPoint(new Vector3(screen.x, screen.y, 0f));
-            int2 tile = new(Mathf.FloorToInt(world.x), Mathf.FloorToInt(world.y));
+            if (!_camera.pixelRect.Contains(screen))
+            {
+                tile = default;
+                return false;
+            }
             
-            return tile;
+            Vector3 world = _camera.ScreenToWorldPoint(new Vector3(screen.x, screen.y, 0f));
+            tile = new int2(Mathf.FloorToInt(world.x), Mathf.FloorToInt(world.y));
+            
+            return true;
         }
     }
 }

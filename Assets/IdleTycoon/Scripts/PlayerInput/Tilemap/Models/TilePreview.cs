@@ -7,13 +7,13 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Models
     {
         public readonly int2 tile;
         public readonly bool isValid;
-        public readonly TilePreviewProjection projection;
+        public readonly TilePreviewStyle style;
 
-        public TilePreview(int2 tile, bool isValid, TilePreviewProjection projection)
+        public TilePreview(int2 tile, bool isValid, TilePreviewStyle style)
         {
             this.tile = tile;
             this.isValid = isValid;
-            this.projection = projection;
+            this.style = style;
         }
     }
 }

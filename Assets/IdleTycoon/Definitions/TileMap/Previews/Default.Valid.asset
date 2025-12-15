@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f88e9082057b40da91f52adc6e2b0886, type: 3}
-  m_Name: TilePreviewProjection(N)
+  m_Name: Default.Valid
   m_EditorClassIdentifier: 
-  tileName: 
-  id: 0
+  tileName: Default.Valid
+  style: 0
+  isValid: 0
   view:
-    tile: {fileID: 0}
+    tile: {fileID: 11400000, guid: 07f5ae3ca43cd676481fadd94f779683, type: 2}
     transformation:
-      rotationFlags: 0
-      flipFlags: 0
+      rotation: 1
+      flip: 1

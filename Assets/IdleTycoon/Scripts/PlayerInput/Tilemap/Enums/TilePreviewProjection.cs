@@ -1,6 +1,6 @@
 namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Enums
 {
-    public enum TilePreviewProjection
+    public enum TilePreviewStyle
     {
         Default = 0,
         Valid = 1,

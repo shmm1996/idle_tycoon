@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f88e9082057b40da91f52adc6e2b0886, type: 3}
+  m_Name: Default.Invalid
+  m_EditorClassIdentifier: 
+  tileName: Default.Invalid
+  style: 0
+  isValid: 1
+  view:
+    tile: {fileID: 11400000, guid: d8c4abb8c979ed36c9728ef979e78fad, type: 2}
+    transformation:
+      rotation: 1
+      flip: 1

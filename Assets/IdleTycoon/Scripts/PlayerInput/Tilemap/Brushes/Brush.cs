@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using IdleTycoon.Scripts.PlayerInput.Tilemap.Models;
 using Unity.Mathematics;
 
@@ -7,7 +6,7 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
 {
     public abstract class Brush
     {
-        public IEnumerable<TilePreview> Preview { get; protected  set; } = Array.Empty<TilePreview>();
+        public TilePreview[] Preview { get; protected  set; } = Array.Empty<TilePreview>();
 
         public bool CanApply { get; protected  set; } = false;
 

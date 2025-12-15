@@ -9,11 +9,13 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap
     {
         private readonly Dictionary<string, Brush> _brushes = new();
 
+        private readonly Subject<Unit> _onPreviewUpdated = new();
         private readonly Subject<Unit> _onConfirmationRequested = new();
         private readonly Subject<Unit> _onConfirmationCleared = new();
         
         [CanBeNull] public Brush Active { get; private set; }
 
+        public Observable<Unit> OnPreviewUpdated => _onPreviewUpdated;
         public Observable<Unit> OnConfirmationRequested => _onConfirmationRequested;
         public Observable<Unit> OnConfirmationCleared => _onConfirmationCleared;
 
@@ -62,5 +64,7 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap
                 _onConfirmationCleared.OnNext(Unit.Default);
             }
         }
+        
+        public void NotifyPreviewChanged() => _onPreviewUpdated.OnNext(Unit.Default);
     }
 }

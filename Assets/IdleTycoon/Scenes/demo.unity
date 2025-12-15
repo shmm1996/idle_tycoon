@@ -310,6 +310,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: afcf93d90b04444308c95878daefa42f, type: 2}
   - {fileID: 11400000, guid: fe428ce99194378068714eb6654007f0, type: 2}
   - {fileID: 11400000, guid: 7a9f2ff65386f6c7e9702522922abde0, type: 2}
+  previewTilemap: {fileID: 864386594}
+  tilePreviews:
+  - {fileID: 11400000, guid: 105bc860047513503b64812082b68e08, type: 2}
+  - {fileID: 11400000, guid: 419536d3324d527f8bf96bd441d4bddc, type: 2}
   camera: {fileID: 186921524}
   pointerPosition: {fileID: -6864674455996870153, guid: 116b7ba482b007014bea08623f950887, type: 3}
   pointerPress: {fileID: -3964198082994758983, guid: 116b7ba482b007014bea08623f950887, type: 3}

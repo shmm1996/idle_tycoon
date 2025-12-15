@@ -20,7 +20,7 @@ namespace IdleTycoon.Scripts.Data.Systems
             
             _commands = new Queue<IGameCommand>();
             
-            session.onGameCommand.Subscribe(OnGameCommand).AddTo(_disposables);
+            session.OnGameCommand.Subscribe(OnGameCommand).AddTo(_disposables);
         }
 
         public void Dispose() => _disposables.Dispose();
@@ -29,7 +29,7 @@ namespace IdleTycoon.Scripts.Data.Systems
 
         public void Init()
         {
-            throw new System.NotImplementedException();
+            
         }
 
         public void OnTick()

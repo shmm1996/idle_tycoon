@@ -100,7 +100,7 @@
     <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Definitions\Tiles\TileDefinition.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Definitions\Tiles\TileRoadDefinition.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Definitions\Tiles\TileTerrainDefinition.cs" />
-    <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\PreviewProjection\TilemapPreviewProjectionRenderer.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\PreviewProjection\TilemapPreviewRenderer.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Processor\ITilemapSubProcessor.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Processor\TilemapProcessor.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Processor\TilemapTileProcessor.cs" />

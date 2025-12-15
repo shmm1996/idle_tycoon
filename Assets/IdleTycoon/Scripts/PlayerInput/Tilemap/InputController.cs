@@ -22,26 +22,21 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap
             
             Brush brush = _manager.Active;
             if (brush == null) return;
-
-            if (evt.type == InputEvent.Type.Hover)
-            {
-                if (evt.tile.Equals(_lastTile)) return;
-                
-                _lastTile = evt.tile;
-                brush.Hover(evt.tile);
-                _manager.DetectConfirmationState();
-                
-                return;
-            }
-
+            
             switch (evt.type)
             {
+                case InputEvent.Type.Hover when !evt.tile.Equals(_lastTile):
+                    _lastTile = evt.tile;
+                    brush.Hover(evt.tile);
+                    break;
                 case InputEvent.Type.PrimaryDown: brush.PrimaryDown(evt.tile); break;
                 case InputEvent.Type.PrimaryDrag: brush.PrimaryDrag(evt.tile); break;
                 case InputEvent.Type.PrimaryUp: brush.PrimaryUp(evt.tile); break;
+                default: return;
             }
 
             _manager.DetectConfirmationState();
+            _manager.NotifyPreviewChanged();
         }
     }
 }

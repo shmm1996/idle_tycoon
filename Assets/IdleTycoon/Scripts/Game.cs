@@ -3,8 +3,10 @@ using IdleTycoon.Scripts.Data.Session;
 using IdleTycoon.Scripts.PlayerInput.Tilemap;
 using IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes;
 using IdleTycoon.Scripts.PlayerInput.Tilemap.InputSources;
+using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.PreviewProjection;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
+using IdleTycoon.Scripts.Presentation.Tilemap.PreviewProjection;
 using IdleTycoon.Scripts.Presentation.Tilemap.Processor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,6 +23,9 @@ namespace IdleTycoon.Scripts
         [SerializeField] [FormerlySerializedAs("Roads")] private Tilemap roadsTilemap;
         [SerializeField] private TilemapPartedTileRuleDefinition<TileRoadDefinition>[] roadsRules;
         
+        [SerializeField] [FormerlySerializedAs("Preview")] private Tilemap previewTilemap;
+        [SerializeField] private TilePreviewDefinition[] tilePreviews;
+        
         [SerializeField] private new Camera camera;
         [SerializeField] private InputActionReference pointerPosition;
         [SerializeField] private InputActionReference pointerPress;
@@ -30,6 +35,7 @@ namespace IdleTycoon.Scripts
         private GameSession _session;
         private TilemapProcessor _processor;
         private MouseInputSource _inputSource;
+        private TilemapPreviewRenderer _previewRenderer;
 
         private const float TickTime = 1f;
         private float _deltaTime = 0f;
@@ -48,6 +54,8 @@ namespace IdleTycoon.Scripts
         {
             _session?.Dispose();
             _processor?.Dispose();
+            _inputSource?.Dispose();
+            _previewRenderer?.Dispose();
         }
 
         private void InstallGame()
@@ -61,6 +69,7 @@ namespace IdleTycoon.Scripts
             
             GameSession.Context context = _session.GetContext();
             
+            //Game session state representation.
             TilemapTileProcessor<TilemapTileRuleDefinition<TileTerrainDefinition>, TileTerrainDefinition> terrainProcessor =
                 new(terrainTilemap, context, terrainRules, t => t.weight);
             TilemapPartedTileProcessor<TilemapPartedTileRuleDefinition<TileRoadDefinition>, TileRoadDefinition> roadProcessor = 
@@ -68,11 +77,17 @@ namespace IdleTycoon.Scripts
 
             _processor = new TilemapProcessor(context, terrainProcessor, roadProcessor);
 
-            BrushManager tilemapBrushManager = new();
-            tilemapBrushManager.Register("debug", new BrushDebugArea());
-            tilemapBrushManager.Activate("debug");
-            InputController tilemapInputController = new(tilemapBrushManager, context);
+            //Tilemap player input.
+            BrushManager brushManager = new();
+            brushManager.Register("debug", new BrushDebugArea());
+            brushManager.Activate("debug");
+            InputController tilemapInputController = new(brushManager, context);
             _inputSource = new MouseInputSource(camera, tilemapInputController, pointerPosition, pointerPress);
+
+            //Tilemap player input representation.
+            _previewRenderer = new TilemapPreviewRenderer(previewTilemap, tilePreviews, brushManager);
+            
+            _session.Init();
         }
         
         private void MainLoop(float deltaTime)
