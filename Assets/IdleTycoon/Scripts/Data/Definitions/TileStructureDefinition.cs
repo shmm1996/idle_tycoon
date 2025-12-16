@@ -9,9 +9,9 @@ namespace IdleTycoon.Scripts.Data.Definitions
     {
         [SerializeField] protected int id;
         
-        [SerializeField, EnumFlags] protected TileAttributeFlag placementTileConditionsRequired;
+        [SerializeField, EnumFlags] protected TileAttributeBit placementTileConditionsRequired;
         
-        [SerializeField, EnumFlags] protected TileAttributeFlag placementTileConditionsCollision;
+        [SerializeField, EnumFlags] protected TileAttributeBit placementTileConditionsCollision;
         
         
     }

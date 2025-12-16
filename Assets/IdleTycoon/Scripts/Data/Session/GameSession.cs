@@ -1,7 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using IdleTycoon.Scripts.Data.Commands;
 using IdleTycoon.Scripts.Data.Systems;
-using IdleTycoon.Scripts.Utils;
 using R3;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
@@ -15,8 +16,7 @@ namespace IdleTycoon.Scripts.Data.Session
         private WorldMap.ReadOnly _worldMapReadOnly;
         private readonly Subjects _subjects = new();
         private readonly ISystem[] _systems;
-        
-        public readonly HashQueue<int2> toUpdate = new();
+        private readonly List<int2> _toUpdate = new(256);
         
         public WorldMap* WorldMap => _worldMap;
 
@@ -60,12 +60,30 @@ namespace IdleTycoon.Scripts.Data.Session
             foreach (ISystem system in _systems) 
                 system.Init();
         }
+
+        public void Frame()
+        {
+            if (_toUpdate.Count != 0) _toUpdate.Clear();
+            
+            foreach (ISystem system in _systems) 
+                system.OnFrame();
+
+            if (_toUpdate.Count != 0) _subjects.onTilesUpdated.OnNext(_toUpdate.ToArray());
+        }
         
         public void Tick()
         {
+            if (_toUpdate.Count != 0) _toUpdate.Clear();
+            
             foreach (ISystem system in _systems) 
                 system.OnTick();
+
+            if (_toUpdate.Count != 0) _subjects.onTilesUpdated.OnNext(_toUpdate.ToArray());
         }
+
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ToUpdate(int2 tile) => _toUpdate.Add(tile);
         
         public sealed class Context
         {

@@ -7,7 +7,7 @@ namespace IdleTycoon.Scripts.Data.Session
 {
     public readonly unsafe struct Chunk8X8
     {
-        private const int TileFlagsCount = 8;
+        private const int TileFlagsCount = 4;
         
         public readonly int2 position;
         private readonly ulong* _tileAttributeBitFlags; //[1] - ground ... n - building, k - road ... 
@@ -36,9 +36,12 @@ namespace IdleTycoon.Scripts.Data.Session
         public ulong GetTileAttributeFlags(int tile)
         {
             ulong flags = 0;
-            for (int attribute = 0; attribute < TileFlagsCount; attribute++)
-                flags |= GetTileAttributeFlag(tile, attribute);
-            
+            ulong tileOffset = 1UL << tile;
+            if ((_tileAttributeBitFlags[0] & tileOffset) != 0) flags |= 1UL;
+            //if ((_tileAttributeBitFlags[1] & tileOffset) != 0) flags |= 1UL << 1;
+            //if ((_tileAttributeBitFlags[2] & tileOffset) != 0) flags |= 1UL << 2;
+            if ((_tileAttributeBitFlags[3] & tileOffset) != 0) flags |= 1UL << 3;
+
             return flags;
         }
         

@@ -82,6 +82,8 @@
     <Compile Include="Assets\IdleTycoon\Scripts\Data\Systems\CommandProcessor.Road.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Data\Systems\CommandProcessor.Terrain.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Data\Systems\ISystem.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\Brushes\Brush.Area.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\Brushes\Brush.Clean.Area.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\Brushes\Brush.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\Brushes\Brush.Debug.Area.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\Brushes\Brush.Debug.cs" />
@@ -109,6 +111,8 @@
     <Compile Include="Assets\IdleTycoon\Scripts\Utils\FlagsUtils.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Utils\HashFunctions.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Utils\RectUtils.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Utils\MaskBatchMap.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\Utils\UnsafeUtilityUtils.cs" />
     <None Include="Assets/Packages/System.Runtime.CompilerServices.Unsafe.6.0.0/useSharedDesignerContext.txt" />
     <None Include="Assets/Packages/System.ComponentModel.Annotations.5.0.0/lib/netstandard2.1/System.ComponentModel.Annotations.xml" />
     <None Include="Assets/Packages/System.ComponentModel.Annotations.5.0.0/useSharedDesignerContext.txt" />
@@ -844,6 +848,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\IdleTycoon\Scripts\Presentation\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\IdleTycoon\test.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

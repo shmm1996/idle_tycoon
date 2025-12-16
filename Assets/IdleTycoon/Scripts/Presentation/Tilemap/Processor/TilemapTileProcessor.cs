@@ -46,6 +46,15 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
 
             return true;
         }
+
+        protected override void LazyRemoveTile(int2 tile)
+        {            
+            tileNames[tile.x, tile.y] = null;
+            
+            lazyPositions.Add(tile.ToVector3Int());
+            lazyTiles.Add(null);
+            lazyTransform.Add(Matrix4x4.identity);
+        }
     }
 }
 

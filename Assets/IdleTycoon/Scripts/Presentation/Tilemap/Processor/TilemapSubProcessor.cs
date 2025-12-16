@@ -74,12 +74,19 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
             _affectedBuffer = new int2[dependentOnTileOffsets.Length];
         }
         
-        public bool TryLazyResolveTile(int2 tile)
+        public bool TryLazyResolveTile(int2 tile) //TODO: (int2 tile, int updatedAttributes)
         {
             if (_rules.Length == 0) return false;
-            
+
             int matchedCount = FillMatchedRulesBuffer(tile);
-            if (matchedCount == 0) return false;
+            if (matchedCount == 0)
+            {
+                if (tileNames[tile.x, tile.y] == null) return false;
+
+                LazyRemoveTile(tile);
+                
+                return true;
+            }
             
             TRuleDefinition matchedRule = _matchedBuffer[0];
             for (int i = 1; i < matchedCount; i++)
@@ -91,6 +98,8 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
         }
         
         protected abstract bool TryLazyAddTile(int2 tile, TRuleDefinition matchedRule);
+
+        protected abstract void LazyRemoveTile(int2 tile);
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int FillMatchedRulesBuffer(int2 tile)
@@ -130,10 +139,7 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
             {
                 _tilemap.SetTiles(lazyPositions.ToArray(), lazyTiles.ToArray());
                 for (int i = 0; i < lazyPositions.Count; i++)
-                {
-                    if (lazyTransform[i] == Matrix4x4.identity) continue;
                     _tilemap.SetTransformMatrix(lazyPositions[i], lazyTransform[i]);
-                }
                 
                 lazyPositions.Clear();
                 lazyTiles.Clear();

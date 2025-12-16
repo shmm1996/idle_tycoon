@@ -7,14 +7,14 @@ namespace IdleTycoon.Scripts.Data.Session
 {
     public unsafe partial struct WorldMap
     {
-        private const int AttributesMaskIsGround = (int)TileAttributeFlag.IsGround;
+        private const int AttributesMaskIsGround = (int)TileAttributeBit.IsGround;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetTerrainGround(int2 tile)
         {
             Chunk8X8* chunk = GetTilesChunk(tile);
             int index = Chunk8X8Utils.ToIndexFromGlobal(tile);
-            chunk->AddTileAttributeFlag(index, AttributesMaskIsGround);
+            chunk->AddTileAttributeFlag(index, (int)TileAttributeBitPosition.IsGround);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -25,7 +25,7 @@ namespace IdleTycoon.Scripts.Data.Session
             bool isGround = chunk->IsExistTileAttributeFlag(index, AttributesMaskIsGround);
             if (isGround) return false;
 
-            chunk->AddTileAttributeFlag(index, AttributesMaskIsGround);
+            chunk->AddTileAttributeFlag(index, (int)TileAttributeBitPosition.IsGround);
 
             return true;
         }
@@ -39,7 +39,7 @@ namespace IdleTycoon.Scripts.Data.Session
             bool isGround = (oldFlags & AttributesMaskIsGround) != 0;
             if (isGround) return false;
 
-            chunk->AddTileAttributeFlag(index, AttributesMaskIsGround);
+            chunk->AddTileAttributeFlag(index, (int)TileAttributeBitPosition.IsGround);
 
             return true;
         }
@@ -49,7 +49,7 @@ namespace IdleTycoon.Scripts.Data.Session
         {
             Chunk8X8* chunk = GetTilesChunk(tile);
             int index = Chunk8X8Utils.ToIndexFromGlobal(tile);
-            chunk->ClearTileAttributeFlag(index, AttributesMaskIsGround);
+            chunk->ClearTileAttributeFlag(index, (int)TileAttributeBitPosition.IsGround);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -60,7 +60,7 @@ namespace IdleTycoon.Scripts.Data.Session
             bool isGround = chunk->IsExistTileAttributeFlag(index, AttributesMaskIsGround);
             if (!isGround) return false;
 
-            chunk->ClearTileAttributeFlag(index, AttributesMaskIsGround);
+            chunk->ClearTileAttributeFlag(index, (int)TileAttributeBitPosition.IsGround);
 
             return true;
         }
@@ -74,7 +74,7 @@ namespace IdleTycoon.Scripts.Data.Session
             bool isGround = (oldFlags & AttributesMaskIsGround) != 0;
             if (!isGround) return false;
 
-            chunk->ClearTileAttributeFlag(index, AttributesMaskIsGround);
+            chunk->ClearTileAttributeFlag(index, (int)TileAttributeBitPosition.IsGround);
 
             return true;
         }

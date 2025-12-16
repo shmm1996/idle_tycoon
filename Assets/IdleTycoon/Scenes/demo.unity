@@ -319,17 +319,17 @@ MonoBehaviour:
   pointerPress: {fileID: -3964198082994758983, guid: 116b7ba482b007014bea08623f950887, type: 3}
   json: '{   "size": {     "x": 16,     "y": 16   },   "chunks": [     {       "position":
     {         "x": 0,         "y": 0       },       "tileAttributes": [         {          
-    "flag": 1,           "value": 17940367284526521344         },         {          
-    "flag": 16,           "value": 18014398509481984         }       ]     },    
+    "flag": 0,           "value": 17940367284526521344         },         {          
+    "flag": 3,           "value": 18014398509481984         }       ]     },    
     {       "position": {         "x": 1,         "y": 0       },       "tileAttributes":
-    [         {           "flag": 1,           "value": 506412450677006336        
-    },         {           "flag": 16,           "value": 72093263077580800        
+    [         {           "flag": 0,           "value": 506412450677006336        
+    },         {           "flag": 3,           "value": 72093263077580800        
     }       ]     },     {       "position": {         "x": 0,         "y": 1      
-    },       "tileAttributes": [         {           "flag": 1,           "value":
-    67827742690573564         },         {           "flag": 16,           "value":
+    },       "tileAttributes": [         {           "flag": 0,           "value":
+    67827742690573564         },         {           "flag": 3,           "value":
     35667303735544         }       ]     },     {       "position": {         "x":
     1,         "y": 1       },       "tileAttributes": [         {           "flag":
-    1,           "value": 1129829043975         },         {           "flag": 16,          
+    0,           "value": 1129829043975         },         {           "flag": 3,          
     "value": 34013696         }       ]     }   ] }'
 --- !u!4 &217790522
 Transform:

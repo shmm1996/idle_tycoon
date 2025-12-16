@@ -7,7 +7,7 @@ namespace IdleTycoon.Scripts.Data.Session
 {
     public unsafe partial struct WorldMap
     {
-        private const int AttributesMaskIsRoad = (int)TileAttributeFlag.IsRoad;
+        private const int AttributesMaskIsRoad = (int)TileAttributeBit.IsRoad;
         private const int AttributesMaskGroundWithRoad = AttributesMaskIsGround | AttributesMaskIsRoad;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -15,7 +15,7 @@ namespace IdleTycoon.Scripts.Data.Session
         {
             Chunk8X8* chunk = GetTilesChunk(tile);
             int index = Chunk8X8Utils.ToIndexFromGlobal(tile);
-            chunk->AddTileAttributeFlag(index, AttributesMaskIsRoad);
+            chunk->AddTileAttributeFlag(index, (int)TileAttributeBitPosition.IsRoad);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -24,9 +24,9 @@ namespace IdleTycoon.Scripts.Data.Session
             Chunk8X8* chunk = GetTilesChunk(tile);
             int index = Chunk8X8Utils.ToIndexFromGlobal(tile);
             ulong flags = chunk->GetTileAttributeFlags(index);
-            if ((flags & AttributesMaskGroundWithRoad) != AttributesMaskIsGround) return false;
+            if ((flags & AttributesMaskGroundWithRoad) != AttributesMaskIsGround) return false; //IsGround but IsNotRoad.
 
-            chunk->AddTileAttributeFlag(index, AttributesMaskIsRoad);
+            chunk->AddTileAttributeFlag(index, (int)TileAttributeBitPosition.IsRoad);
 
             return true;
         }
@@ -39,7 +39,7 @@ namespace IdleTycoon.Scripts.Data.Session
             oldFlags = chunk->GetTileAttributeFlags(index);
             if ((oldFlags & AttributesMaskGroundWithRoad) != AttributesMaskIsGround) return false;
 
-            chunk->AddTileAttributeFlag(index, AttributesMaskIsRoad);
+            chunk->AddTileAttributeFlag(index, (int)TileAttributeBitPosition.IsRoad);
 
             return true;
         }
@@ -49,7 +49,7 @@ namespace IdleTycoon.Scripts.Data.Session
         {
             Chunk8X8* chunk = GetTilesChunk(tile);
             int index = Chunk8X8Utils.ToIndexFromGlobal(tile);
-            chunk->ClearTileAttributeFlag(index, AttributesMaskIsRoad);
+            chunk->ClearTileAttributeFlag(index, (int)TileAttributeBitPosition.IsRoad);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -57,10 +57,10 @@ namespace IdleTycoon.Scripts.Data.Session
         {
             Chunk8X8* chunk = GetTilesChunk(tile);
             int index = Chunk8X8Utils.ToIndexFromGlobal(tile);
-            ulong flags = chunk->GetTileAttributeFlags(index);
-            if ((flags & AttributesMaskGroundWithRoad) != AttributesMaskIsGround) return false;
+            bool isRoad = chunk->IsExistTileAttributeFlag(index, AttributesMaskIsRoad);
+            if (!isRoad) return false;
 
-            chunk->ClearTileAttributeFlag(index, AttributesMaskIsRoad);
+            chunk->ClearTileAttributeFlag(index, (int)TileAttributeBitPosition.IsRoad);
 
             return true;
         }
@@ -71,9 +71,10 @@ namespace IdleTycoon.Scripts.Data.Session
             Chunk8X8* chunk = GetTilesChunk(tile);
             int index = Chunk8X8Utils.ToIndexFromGlobal(tile);
             oldFlags = chunk->GetTileAttributeFlags(index);
-            if ((oldFlags & AttributesMaskGroundWithRoad) != AttributesMaskIsGround) return false;
+            bool isRoad = (oldFlags & AttributesMaskIsRoad) != 0;
+            if (!isRoad) return false;
 
-            chunk->ClearTileAttributeFlag(index, AttributesMaskIsRoad);
+            chunk->ClearTileAttributeFlag(index, (int)TileAttributeBitPosition.IsRoad);
 
             return true;
         }

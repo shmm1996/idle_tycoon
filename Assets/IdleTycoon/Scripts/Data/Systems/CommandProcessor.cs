@@ -32,7 +32,7 @@ namespace IdleTycoon.Scripts.Data.Systems
             
         }
 
-        public void OnTick()
+        public void OnFrame()
         {
             _worldMap = _session.WorldMap;
             while (_commands.TryDequeue(out IGameCommand command))
@@ -45,6 +45,11 @@ namespace IdleTycoon.Scripts.Data.Systems
                     case RoadCommand.Remove c: OnRoadRemove(c); break;
                 }
             }
+        }
+
+        public void OnTick()
+        {
+            
         }
     }
 }

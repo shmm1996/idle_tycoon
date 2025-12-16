@@ -1,5 +1,4 @@
 using System;
-using IdleTycoon.Scripts.CustomEditor.Attributes;
 using IdleTycoon.Scripts.Data.Enums;
 using IdleTycoon.Scripts.PlayerInput.Tilemap.Enums;
 using UnityEngine;

@@ -41,7 +41,7 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
 
         public override bool IsMatch(int2 tile, WorldMap.ReadOnly worldMap)
         {
-            if (!worldMap.HasAttribute(tile, (int)TileAttributeFlag.IsRoad)) return false;
+            if (!worldMap.HasAttribute(tile, (int)TileAttributeBitPosition.IsRoad)) return false;
 
             int isRoadMask = (int)isRoadNeighborFlags;
             int isNotRoadMask = (int)isNotRoadNeighborFlags;
@@ -52,13 +52,13 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
                 {
                     var neighbour = (TileRoad.Neighbour)bit;
                     int2 nextTile = tile + neighbour.ToOffset();
-                    if (!worldMap.HasTile(nextTile) || !worldMap.HasAttribute(nextTile, (int)TileAttributeFlag.IsRoad)) return false;
+                    if (!worldMap.HasTile(nextTile) || !worldMap.HasAttribute(nextTile, (int)TileAttributeBitPosition.IsRoad)) return false;
                 }
                 else if ((isNotRoadMask & bit) != 0)
                 {
                     var neighbour = (TileRoad.Neighbour)bit;
                     int2 nextTile = tile + neighbour.ToOffset();
-                    if (worldMap.HasTile(nextTile) && worldMap.HasAttribute(nextTile, (int)TileAttributeFlag.IsRoad)) return false;
+                    if (worldMap.HasTile(nextTile) && worldMap.HasAttribute(nextTile, (int)TileAttributeBitPosition.IsRoad)) return false;
                 }
             }
 

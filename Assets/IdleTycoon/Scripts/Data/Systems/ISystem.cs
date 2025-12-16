@@ -4,6 +4,8 @@ namespace IdleTycoon.Scripts.Data.Systems
     {
         void Init();
 
+        void OnFrame();
+
         void OnTick();
     }
 }

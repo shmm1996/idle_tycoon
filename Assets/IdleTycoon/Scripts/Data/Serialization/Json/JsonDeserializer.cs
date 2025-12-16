@@ -11,7 +11,7 @@ namespace IdleTycoon.Scripts.Data.Serialization.Json
 {
     public static class JsonDeserializer
     {
-        private const int SerializableTileAttributesMask = (int)TileAttributeFlag.IsGround | (int)TileAttributeFlag.IsRoad;
+        private const int SerializableTileAttributesMask = (int)TileAttributeBit.IsGround | (int)TileAttributeBit.IsRoad;
         
         public static unsafe Session.WorldMap* DeserializeWorldMap(string json)
         {
@@ -48,8 +48,8 @@ namespace IdleTycoon.Scripts.Data.Serialization.Json
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool IsSerializable(int tileAttribute) => (tileAttribute & SerializableTileAttributesMask) != 0;
-        
+        private static bool IsSerializable(int attribute) => ((1UL << attribute) & SerializableTileAttributesMask) != 0;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe void SetChunkTileEntities(Session.WorldMap* sessionWorldMap, TileEntity[] entities)
         {

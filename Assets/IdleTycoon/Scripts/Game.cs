@@ -78,9 +78,12 @@ namespace IdleTycoon.Scripts
             _processor = new TilemapProcessor(context, terrainProcessor, roadProcessor);
 
             //Tilemap player input.
+            GameSession.CommandsBus commandsBus = _session.GetCommandsBus();
+            
             BrushManager brushManager = new();
-            brushManager.Register("debug", new BrushDebugArea());
-            brushManager.Activate("debug");
+            brushManager.Register("debug_area", new BrushDebugArea());
+            brushManager.Register("clean_area", new BrushCleanArea(commandsBus));
+            brushManager.Activate("clean_area");
             InputController tilemapInputController = new(brushManager, context);
             _inputSource = new MouseInputSource(camera, tilemapInputController, pointerPosition, pointerPress);
 
@@ -93,9 +96,10 @@ namespace IdleTycoon.Scripts
         private void MainLoop(float deltaTime)
         {
             _inputSource.Update();
+
+            _session.Frame();
             
             _deltaTime += deltaTime;
-
             while (_deltaTime >= TickTime)
             {
                 _session.Tick();

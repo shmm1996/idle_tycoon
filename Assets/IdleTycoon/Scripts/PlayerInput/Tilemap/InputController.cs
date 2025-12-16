@@ -18,7 +18,7 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap
 
         public void Process(InputEvent evt)
         {
-            if (!_context.WorldMap.HasTile(evt.tile)) return;
+            if (!_context.WorldMap.HasTile(evt.tile)) return; //TODO: Process in brush. Hide or ceil on drag area.
             
             Brush brush = _manager.Active;
             if (brush == null) return;

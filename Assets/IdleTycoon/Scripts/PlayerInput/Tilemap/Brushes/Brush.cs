@@ -10,14 +10,16 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
 
         public bool CanApply { get; protected  set; } = false;
 
-        public abstract void Hover(int2 tile);
+        public virtual void Hover(int2 tile) {}
         
-        public abstract void PrimaryDown(int2 tile);
+        public virtual void PrimaryDown(int2 tile) {}
         
-        public abstract void PrimaryDrag(int2 tile);
+        public virtual void PrimaryDrag(int2 tile) {}
         
-        public abstract void PrimaryUp(int2 tile);
+        public virtual void PrimaryUp(int2 tile) {}
         
-        public abstract void Cancel();
+        public virtual void Cancel() {}
+
+        protected abstract TilePreview BuildPreview(int2 tile);
     }
 }

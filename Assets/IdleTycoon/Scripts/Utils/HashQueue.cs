@@ -7,9 +7,9 @@ namespace IdleTycoon.Scripts.Utils
     {
         private readonly Queue<T> _queue = new();
         private readonly HashSet<T> _queued = new();
-        
+
         public int Count => _queue.Count;
-        
+
         public void Enqueue(T item)
         {
             if (_queued.Add(item))
@@ -18,10 +18,10 @@ namespace IdleTycoon.Scripts.Utils
 
         public void EnqueueRange(ReadOnlySpan<T> items)
         {
-            foreach (var item in items)
+            foreach (T item in items)
                 Enqueue(item);
         }
-        
+
         public bool TryDequeue(out T item)
         {
             if (!_queue.TryDequeue(out item)) return false;
@@ -29,7 +29,7 @@ namespace IdleTycoon.Scripts.Utils
 
             return true;
         }
-        
+
         public void Clear()
         {
             _queue.Clear();

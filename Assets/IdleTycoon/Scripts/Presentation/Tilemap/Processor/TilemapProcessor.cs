@@ -12,14 +12,12 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
         private readonly ITilemapSubProcessor[] _processors;
         private readonly CompositeDisposable _disposables;
 
-        private readonly HashQueue<int2> _toResolve;
+        private readonly HashQueue<int2> _toResolve = new();
 
         public TilemapProcessor(GameSession.Context context, params ITilemapSubProcessor[] processors)
         {
             _processors = processors;
             _disposables = new CompositeDisposable();
-
-            _toResolve = new HashQueue<int2>();
             
             context.Observables.OnTilesUpdated.Subscribe(OnTilesUpdated).AddTo(_disposables);
             context.Observables.OnTilesCleaned.Subscribe(OnTilesCleaned).AddTo(_disposables);
@@ -28,11 +26,7 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
 
         public void Dispose() => _disposables.Dispose();
 
-        private void OnTilesUpdated(int2[] tiles)
-        {
-            foreach (int2 tile in tiles)
-                _toResolve.Enqueue(tile);
-        }
+        private void OnTilesUpdated(int2[] tiles) => _toResolve.EnqueueRange(tiles.AsSpan());
 
         private void OnTilesCleaned(int2[] tiles)
         {
@@ -41,8 +35,8 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
 
         private void OnWorldMapLoaded(WorldMap.ReadOnly worldMap)
         {
-            for (int x = 0; x < worldMap.size.x; x++)
             for (int y = 0; y < worldMap.size.y; y++)
+            for (int x = 0; x < worldMap.size.x; x++)
                 _toResolve.Enqueue(new int2(x, y));
         }
 
@@ -60,7 +54,7 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Processor
                     i++;
                     if (!processor.TryLazyResolveTile(tile)) continue;
                     foreach (int2 affected in processor.GetAffectedTiles(tile))
-                        if (!processed.Contains(affected))
+                        if (!processed.Contains(affected)) 
                             _toResolve.Enqueue(affected);
                 }
             }

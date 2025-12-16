@@ -12,7 +12,7 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
         
         public override void Hover(int2 tile)
         {
-            UpdateAreaPreview(tile);
+            UpdatePreview(tile);
             
             Debug.Log($"[BrushDebug] Hover at {tile}");
         }
@@ -44,14 +44,16 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
         {
             _pressed = false;
 
-            ClearAreaPreview();
+            ClearPreview();
             
             Debug.Log("[BrushDebug] Cancel()");
         }
 
-        private void UpdateAreaPreview(int2 tile)
+        protected override TilePreview BuildPreview(int2 tile) => new(tile, true, TilePreviewStyle.Default);
+
+        private void UpdatePreview(int2 tile)
         {
-            TilePreview preview = new(tile, true, TilePreviewStyle.Default);
+            TilePreview preview = BuildPreview(tile);
 
             if (Preview.Length == 1)
                 Preview[0] = preview;
@@ -59,7 +61,7 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
                 Preview = new[] { preview };
         }
 
-        private void ClearAreaPreview() =>
+        private void ClearPreview() =>
             Preview = Array.Empty<TilePreview>();
     }
 }

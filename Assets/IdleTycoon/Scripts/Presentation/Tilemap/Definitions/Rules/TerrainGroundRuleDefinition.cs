@@ -15,6 +15,6 @@ namespace IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules
 
         public override bool IsValid() => target;
 
-        public override bool IsMatch(int2 tile, WorldMap.ReadOnly worldMap) => worldMap.HasAttribute(tile, (int)TileAttributeFlag.IsGround);
+        public override bool IsMatch(int2 tile, WorldMap.ReadOnly worldMap) => worldMap.HasAttribute(tile, (int)TileAttributeBitPosition.IsGround);
     }
 }

@@ -13,9 +13,9 @@ namespace IdleTycoon.Scripts.Data.Systems
             
             if (!_worldMap->TrySetRoad(tile, out ulong flags)) return;
             
-            //TODO: scan flags and marl for validation;
+            //TODO: scan flags and mark for validation;
             
-            _session.toUpdate.Enqueue(tile);
+            _session.ToUpdate(tile);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -25,9 +25,9 @@ namespace IdleTycoon.Scripts.Data.Systems
             
             if (!_worldMap->TryRemoveRoad(tile, out ulong flags)) return;
             
-            //TODO: scan flags and marl for validation;
+            //TODO: scan flags and mark for validation;
             
-            _session.toUpdate.Enqueue(tile);
+            _session.ToUpdate(tile);
         }
     }
 }

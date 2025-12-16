@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 
 namespace IdleTycoon.Scripts.Utils
@@ -8,6 +7,8 @@ namespace IdleTycoon.Scripts.Utils
     public unsafe struct FastPool<T> : IDisposable where T : unmanaged
     {
         private const int MemoryBlockAlignment = 64;
+        private const int PoolCapacityAlignment = 64; //word size
+        private const Unity.Collections.Allocator Allocator = Unity.Collections.Allocator.Persistent;
 
         private T* _entities;
         private int* _ids;
@@ -27,29 +28,28 @@ namespace IdleTycoon.Scripts.Utils
         public int Growth
         {
             get => _growthBacking;
-            set => _growthBacking = Align64(Math.Max(64, value));
+            set => _growthBacking = Align64(Math.Max(PoolCapacityAlignment, value));
         }
-
-        public FastPool(int initialCapacity = 1024)
+        
+        public FastPool(int initialCapacity = 1024, int growthBacking = 1024)
         {
-            _capacity = Align64(Math.Max(64, initialCapacity));
+            _capacity = Align64(Math.Max(PoolCapacityAlignment, initialCapacity));
+            _growthBacking = Align64(Math.Max(PoolCapacityAlignment, growthBacking));
             _count = 0;
 
             int byteEntities = _capacity * sizeof(T);
             int byteIds = _capacity * sizeof(int);
-            int bitArraySize = _capacity / 64;
+            int bitArraySize = _capacity / PoolCapacityAlignment;
             int byteActiveBits = bitArraySize * sizeof(ulong);
 
-            _entities = (T*)UnsafeUtility.Malloc(byteEntities, MemoryBlockAlignment, Allocator.Persistent);
-            _ids = (int*)UnsafeUtility.Malloc(byteIds, MemoryBlockAlignment, Allocator.Persistent);
-            _activeBits = (ulong*)UnsafeUtility.Malloc(byteActiveBits, MemoryBlockAlignment, Allocator.Persistent);
+            _entities = (T*)UnsafeUtility.Malloc(byteEntities, MemoryBlockAlignment, Allocator);
+            _ids = (int*)UnsafeUtility.Malloc(byteIds, MemoryBlockAlignment, Allocator);
+            _activeBits = (ulong*)UnsafeUtility.Malloc(byteActiveBits, MemoryBlockAlignment, Allocator);
 
             UnsafeUtility.MemClear(_entities, byteEntities);
             UnsafeUtility.MemClear(_ids, byteIds);
             UnsafeUtility.MemClear(_activeBits, byteActiveBits);
-
-            _growthBacking = 1024;
-
+            
             _firstWordWithFreeBit = 0;
             _firstWordWithActiveBits = int.MaxValue;
             _lastWordWithActiveBits = -1;
@@ -60,9 +60,9 @@ namespace IdleTycoon.Scripts.Utils
 
         public void Dispose()
         {
-            FreeAligned(_entities);
-            FreeAligned(_ids);
-            FreeAligned(_activeBits);
+            Free(_entities);
+            Free(_ids);
+            Free(_activeBits);
 
             _entities = null;
             _ids = null;
@@ -135,7 +135,7 @@ namespace IdleTycoon.Scripts.Utils
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int FindFreeSlot()
         {
-            int words = _capacity / 64;
+            int words = _capacity / PoolCapacityAlignment;
             for (int w = _firstWordWithFreeBit; w < words; w++)
             {
                 ulong word = _activeBits[w];
@@ -154,37 +154,34 @@ namespace IdleTycoon.Scripts.Utils
 
         public void Grow(int newCapacity)
         {
-            if (newCapacity <= _capacity) return;
             newCapacity = Align64(newCapacity);
+            if (newCapacity <= _capacity) return;
 
             int newByteEntities = newCapacity * sizeof(T);
             int newByteIds = newCapacity * sizeof(int);
-            int newBitSize = newCapacity / 64;
+            int newBitSize = newCapacity / PoolCapacityAlignment;
             int newByteActiveBits = newBitSize * sizeof(ulong);
 
-            T* newEntities = (T*)UnsafeUtility.Malloc(newByteEntities, MemoryBlockAlignment, Allocator.Persistent);
-            int* newIds = (int*)UnsafeUtility.Malloc(newByteIds, MemoryBlockAlignment, Allocator.Persistent);
-            ulong* newActiveBits =
-                (ulong*)UnsafeUtility.Malloc(newByteActiveBits, MemoryBlockAlignment, Allocator.Persistent);
+            T* newEntities = (T*)UnsafeUtility.Malloc(newByteEntities, MemoryBlockAlignment, Allocator);
+            int* newIds = (int*)UnsafeUtility.Malloc(newByteIds, MemoryBlockAlignment, Allocator);
+            ulong* newActiveBits = (ulong*)UnsafeUtility.Malloc(newByteActiveBits, MemoryBlockAlignment, Allocator);
 
-            Buffer.MemoryCopy(_entities, newEntities, newByteEntities, _capacity * sizeof(T));
-            Buffer.MemoryCopy(_ids, newIds, newByteIds, _capacity * sizeof(int));
-            int oldBitSize = _capacity / 64;
-            Buffer.MemoryCopy(_activeBits, newActiveBits, newByteActiveBits, oldBitSize * sizeof(ulong));
+            long copyEntitiesBytes = (long)_capacity * sizeof(T);
+            long copyIdsBytes = (long)_capacity * sizeof(int);
+            int oldBitSize = _capacity / PoolCapacityAlignment;
+            long copyActiveBitsBytes = (long)oldBitSize * sizeof(ulong);
 
-            if (newCapacity > _capacity)
-            {
-                UnsafeUtility.MemClear((byte*)newEntities + _capacity * sizeof(T),
-                    (newCapacity - _capacity) * sizeof(T));
-                UnsafeUtility.MemClear((byte*)newIds + _capacity * sizeof(int),
-                    (newCapacity - _capacity) * sizeof(int));
-                UnsafeUtility.MemClear((byte*)newActiveBits + oldBitSize * sizeof(ulong),
-                    (newBitSize - oldBitSize) * sizeof(ulong));
-            }
+            UnsafeUtility.MemCpy(newEntities, _entities, copyEntitiesBytes);
+            UnsafeUtility.MemCpy(newIds, _ids, copyIdsBytes);
+            UnsafeUtility.MemCpy(newActiveBits, _activeBits, copyActiveBitsBytes);
 
-            FreeAligned(_entities);
-            FreeAligned(_ids);
-            FreeAligned(_activeBits);
+            UnsafeUtility.MemClear((byte*)newEntities + _capacity * sizeof(T), (newCapacity - _capacity) * sizeof(T));
+            UnsafeUtility.MemClear((byte*)newIds + _capacity * sizeof(int), (newCapacity - _capacity) * sizeof(int));
+            UnsafeUtility.MemClear((byte*)newActiveBits + oldBitSize * sizeof(ulong), (newBitSize - oldBitSize) * sizeof(ulong));
+
+            Free(_entities);
+            Free(_ids);
+            Free(_activeBits);
 
             _entities = newEntities;
             _ids = newIds;
@@ -193,7 +190,7 @@ namespace IdleTycoon.Scripts.Utils
             
             _firstWordWithActiveBits = int.MaxValue;
             _lastWordWithActiveBits = -1;
-            int words = _capacity / 64;
+            int words = _capacity / PoolCapacityAlignment;
             for (int w = 0; w < words; w++)
             {
                 if (_activeBits[w] == 0) continue;
@@ -301,16 +298,16 @@ namespace IdleTycoon.Scripts.Utils
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void FreeAligned(void* alignedPtr)
+        private static void Free(void* ptr)
         {
-            if (alignedPtr == null) return;
-            UnsafeUtility.Free(alignedPtr, Allocator.Persistent);
+            if (ptr == null) return;
+            UnsafeUtility.Free(ptr, Allocator);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int FindNextActiveWord(int start)
         {
-            int words = _capacity / 64;
+            int words = _capacity / PoolCapacityAlignment;
             for (int w = start; w < words; w++)
                 if (_activeBits[w] != 0)
                     return w;
