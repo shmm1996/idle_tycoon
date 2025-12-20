@@ -82,6 +82,9 @@
     <Compile Include="Assets\IdleTycoon\Scripts\Data\Systems\CommandProcessor.Road.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Data\Systems\CommandProcessor.Terrain.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Data\Systems\ISystem.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Camera\CameraController.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Camera\InputEvent.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\InputRouters\PointerInputRouter.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\Brushes\Brush.Area.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\Brushes\Brush.Clean.Area.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\Brushes\Brush.cs" />
@@ -90,9 +93,8 @@
     <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\Brushes\ConfirmableBrush.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\BrushManager.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\Enums\TilePreviewProjection.cs" />
-    <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\InputController.cs" />
+    <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\TilemapController.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\InputEvent.cs" />
-    <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\InputSources\TilemapMouseInputSource.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\PlayerInput\Tilemap\Models\TilePreview.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Definitions\PreviewProjection\TilePreviewDefinition.cs" />
     <Compile Include="Assets\IdleTycoon\Scripts\Presentation\Tilemap\Definitions\Rules\RoadRuleDefinition.cs" />

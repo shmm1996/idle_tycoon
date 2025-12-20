@@ -1,8 +1,9 @@
 using IdleTycoon.Scripts.Data.Serialization.Json;
 using IdleTycoon.Scripts.Data.Session;
+using IdleTycoon.Scripts.PlayerInput.Camera;
+using IdleTycoon.Scripts.PlayerInput.InputRouters;
 using IdleTycoon.Scripts.PlayerInput.Tilemap;
 using IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes;
-using IdleTycoon.Scripts.PlayerInput.Tilemap.InputSources;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.PreviewProjection;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Rules;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
@@ -34,7 +35,7 @@ namespace IdleTycoon.Scripts
 
         private GameSession _session;
         private TilemapProcessor _processor;
-        private MouseInputSource _inputSource;
+        private PointerInputRouter _pointerInputRouter;
         private TilemapPreviewRenderer _previewRenderer;
 
         private const float TickTime = 1f;
@@ -54,7 +55,7 @@ namespace IdleTycoon.Scripts
         {
             _session?.Dispose();
             _processor?.Dispose();
-            _inputSource?.Dispose();
+            _pointerInputRouter?.Dispose();
             _previewRenderer?.Dispose();
         }
 
@@ -77,15 +78,18 @@ namespace IdleTycoon.Scripts
 
             _processor = new TilemapProcessor(context, terrainProcessor, roadProcessor);
 
-            //Tilemap player input.
+            //Player input.
             GameSession.CommandsBus commandsBus = _session.GetCommandsBus();
             
             BrushManager brushManager = new();
             brushManager.Register("debug_area", new BrushDebugArea());
             brushManager.Register("clean_area", new BrushCleanArea(commandsBus));
             brushManager.Activate("clean_area");
-            InputController tilemapInputController = new(brushManager, context);
-            _inputSource = new MouseInputSource(camera, tilemapInputController, pointerPosition, pointerPress);
+
+            CameraController cameraController = new(camera.transform);
+            TilemapController tilemapController = new(brushManager, context);
+            
+            _pointerInputRouter = new PointerInputRouter(camera, pointerPosition, pointerPress, cameraController, tilemapController);
 
             //Tilemap player input representation.
             _previewRenderer = new TilemapPreviewRenderer(previewTilemap, tilePreviews, brushManager);
@@ -95,7 +99,7 @@ namespace IdleTycoon.Scripts
         
         private void MainLoop(float deltaTime)
         {
-            _inputSource.Update();
+            _pointerInputRouter.Update();
 
             _session.Frame();
             

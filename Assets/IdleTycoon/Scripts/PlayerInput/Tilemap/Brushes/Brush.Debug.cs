@@ -17,21 +17,21 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
             Debug.Log($"[BrushDebug] Hover at {tile}");
         }
 
-        public override void PrimaryDown(int2 tile)
+        public override void Down(int2 tile)
         {
             _pressed = true;
             
             Debug.Log($"[BrushDebug] PrimaryDown at {tile}");
         }
 
-        public override void PrimaryDrag(int2 tile)
+        public override void Drag(int2 tile)
         {
             if (!_pressed) return;
 
             Debug.Log($"[BrushDebug] PrimaryDrag at {tile}");
         }
 
-        public override void PrimaryUp(int2 tile)
+        public override void Up(int2 tile)
         {
             if (!_pressed) return;
 

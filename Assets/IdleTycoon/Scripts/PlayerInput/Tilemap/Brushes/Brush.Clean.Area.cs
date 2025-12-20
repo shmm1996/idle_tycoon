@@ -15,7 +15,7 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
             _commands = commands;
         }
 
-        public override void PrimaryUp(int2 tile)
+        public override void Up(int2 tile)
         {
             foreach (TilePreview tilePreview in Preview)
             {
@@ -23,7 +23,7 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
                 //TODO: OnNext() with Command.Remove for each constructions.
             }
             
-            base.PrimaryUp(tile);
+            base.Up(tile);
         }
         
         protected override TilePreview BuildPreview(int2 tile) =>

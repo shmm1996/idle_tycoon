@@ -20,25 +20,25 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
             Preview = new[] { new TilePreview(tile, true, TilePreviewStyle.Default) };
         }
 
-        public override void PrimaryDown(int2 tile)
+        public override void Down(int2 tile)
         {
             isSelecting = true;
             start = tile;
             end = tile;
 
-            UpdateAreaPreview();
+            ComputePreview();
         }
 
-        public override void PrimaryDrag(int2 tile)
+        public override void Drag(int2 tile)
         {
             if (!isSelecting) return;
 
             end = tile;
             
-            UpdateAreaPreview();
+            ComputePreview();
         }
 
-        public override void PrimaryUp(int2 tile)
+        public override void Up(int2 tile)
         {
             if (!isSelecting) return;
 
@@ -46,22 +46,22 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
             start = tile;
             end = tile;
 
-            UpdateAreaPreview();
+            ComputePreview();
         }
 
         public override void Cancel()
         {
             isSelecting = false;
             
-            ClearAreaPreview();
+            ResetPreview();
         }
 
-        private void UpdateAreaPreview() =>
+        private void ComputePreview() =>
             Preview = RectUtils.GetRectEnumerable(start, end)
                 .Select(BuildPreview)
                 .ToArray();
         
-        private void ClearAreaPreview() =>
+        private void ResetPreview() =>
             Preview = Array.Empty<TilePreview>();
     }
 }

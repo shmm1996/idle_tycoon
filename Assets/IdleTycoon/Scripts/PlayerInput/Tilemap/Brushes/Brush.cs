@@ -12,11 +12,11 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
 
         public virtual void Hover(int2 tile) {}
         
-        public virtual void PrimaryDown(int2 tile) {}
+        public virtual void Down(int2 tile) {}
         
-        public virtual void PrimaryDrag(int2 tile) {}
+        public virtual void Drag(int2 tile) {}
         
-        public virtual void PrimaryUp(int2 tile) {}
+        public virtual void Up(int2 tile) {}
         
         public virtual void Cancel() {}
 

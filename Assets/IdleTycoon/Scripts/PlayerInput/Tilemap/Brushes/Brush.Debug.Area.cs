@@ -14,23 +14,23 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes
             Debug.Log($"[BrushDebugArea] Hover at {tile}");
         }
 
-        public override void PrimaryDown(int2 tile)
+        public override void Down(int2 tile)
         {
-            base.PrimaryDown(tile);
+            base.Down(tile);
 
             Debug.Log($"[BrushDebugArea] PrimaryDown at {tile}");
         }
 
-        public override void PrimaryDrag(int2 tile)
+        public override void Drag(int2 tile)
         {
-            base.PrimaryDrag(tile);
+            base.Drag(tile);
 
             Debug.Log($"[BrushDebugArea] PrimaryDrag at {tile}");
         }
 
-        public override void PrimaryUp(int2 tile)
+        public override void Up(int2 tile)
         {
-            base.PrimaryUp(tile);
+            base.Up(tile);
 
             Debug.Log($"[BrushDebugArea] PrimaryUp at {tile}");
             Debug.Log($"[BrushDebugArea] Final area contains {Preview.Length} tiles");
