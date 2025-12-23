@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using CameraInputEvent = IdleTycoon.Scripts.PlayerInput.Camera.InputEvent;
 using TilemapInputEvent = IdleTycoon.Scripts.PlayerInput.Tilemap.InputEvent;
 
 namespace IdleTycoon.Scripts.PlayerInput.InputRouters
@@ -13,8 +14,6 @@ namespace IdleTycoon.Scripts.PlayerInput.InputRouters
     public sealed class PointerInputRouter : IDisposable
     {
         private const float TileSize = 1.0f; //TODO: move to global constants.
-        private const float CameraToTilemapTransitionTime = 0.2f;
-        private const float CameraDragDeadZonePixels = 6f;
         
         private readonly UnityEngine.Camera _camera;
         
@@ -25,7 +24,6 @@ namespace IdleTycoon.Scripts.PlayerInput.InputRouters
         private readonly TilemapController _tilemapController;
 
         private bool _held;
-        private float _heldAt;
         private int2 _tile;
         
         private enum Lock { None, Tilemap, Camera, UI }
@@ -89,9 +87,18 @@ namespace IdleTycoon.Scripts.PlayerInput.InputRouters
         {
             switch (_lock)
             {
-                case Lock.None:
+                case Lock.None when !_held && press && !_tilemapController.IsReady:
+                    _held = true;
+                    _lock = Lock.Camera;
+                    _cameraController.Process(new CameraInputEvent(CameraInputEvent.Type.Down, screen, Time.unscaledTime));
                     break;
-                case Lock.Camera:
+                case Lock.Camera when _held && press:
+                    _cameraController.Process(new CameraInputEvent(CameraInputEvent.Type.Dragging, screen, Time.unscaledTime));
+                    break;                
+                case Lock.Camera when _held && !press:
+                    _held = false;
+                    _lock = Lock.None;
+                    _cameraController.Process(new CameraInputEvent(CameraInputEvent.Type.Up, screen, Time.unscaledTime));
                     break;
             }
         }
@@ -99,6 +106,7 @@ namespace IdleTycoon.Scripts.PlayerInput.InputRouters
         private void ResolveOnTileInput(bool press, float2 screen)
         {
             if (_lock is not (Lock.None or Lock.Tilemap) ||
+                !_tilemapController.IsReady || //TODO: Control from player input state.
                 !TryGetTileUnderMouse(screen, out int2 tile)) return;
 
             bool isTileChanged = !tile.Equals(_tile);

@@ -7,6 +7,8 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap
     {
         private readonly BrushManager _manager;
         private readonly GameSession.Context _context;
+        
+        public bool IsReady => _manager.Active != null; //TODO: Remove. Do not use for reading player control state.
 
         public TilemapController(BrushManager manager, GameSession.Context context)
         {

@@ -4,15 +4,17 @@ namespace IdleTycoon.Scripts.PlayerInput.Camera
 {
     public readonly struct InputEvent
     {
-        public readonly float2 position;
+        public readonly float2 screen;
+        public readonly float unscaledTime;
         
-        public enum Type { Down, Drag, Up }
+        public enum Type { Down, Dragging, Up }
         public readonly Type type;
 
-        public InputEvent(float2 position, Type type)
+        public InputEvent(Type type, float2 screen, float unscaledTime)
         {
-            this.position = position;
             this.type = type;
+            this.screen = screen;
+            this.unscaledTime = unscaledTime;
         }
     }
 }

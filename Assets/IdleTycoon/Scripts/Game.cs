@@ -37,6 +37,8 @@ namespace IdleTycoon.Scripts
         private TilemapProcessor _processor;
         private PointerInputRouter _pointerInputRouter;
         private TilemapPreviewRenderer _previewRenderer;
+        
+        private CameraController _cameraController;
 
         private const float TickTime = 1f;
         private float _deltaTime = 0f;
@@ -86,10 +88,10 @@ namespace IdleTycoon.Scripts
             brushManager.Register("clean_area", new BrushCleanArea(commandsBus));
             brushManager.Activate("clean_area");
 
-            CameraController cameraController = new(camera.transform);
+            _cameraController = new CameraController(camera);
             TilemapController tilemapController = new(brushManager, context);
             
-            _pointerInputRouter = new PointerInputRouter(camera, pointerPosition, pointerPress, cameraController, tilemapController);
+            _pointerInputRouter = new PointerInputRouter(camera, pointerPosition, pointerPress, _cameraController, tilemapController);
 
             //Tilemap player input representation.
             _previewRenderer = new TilemapPreviewRenderer(previewTilemap, tilePreviews, brushManager);
@@ -114,6 +116,8 @@ namespace IdleTycoon.Scripts
 
             if (toResolveTilesCount > 0)
                 Debug.LogWarning($"[{nameof(MainLoop)}] Tiles left to resolve: {toResolveTilesCount}.");
+            
+            _cameraController.Update(deltaTime);
         }
     }
 }
