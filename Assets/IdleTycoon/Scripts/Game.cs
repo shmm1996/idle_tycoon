@@ -1,7 +1,7 @@
 using IdleTycoon.Scripts.Data.Serialization.Json;
 using IdleTycoon.Scripts.Data.Session;
+using IdleTycoon.Scripts.PlayerInput;
 using IdleTycoon.Scripts.PlayerInput.Camera;
-using IdleTycoon.Scripts.PlayerInput.InputRouters;
 using IdleTycoon.Scripts.PlayerInput.Tilemap;
 using IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes;
 using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.PreviewProjection;
@@ -10,9 +10,10 @@ using IdleTycoon.Scripts.Presentation.Tilemap.Definitions.Tiles;
 using IdleTycoon.Scripts.Presentation.Tilemap.PreviewProjection;
 using IdleTycoon.Scripts.Presentation.Tilemap.Processor;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
+using CameraPointerInputSource = IdleTycoon.Scripts.PlayerInput.Camera.InputSources.PointerInputSource;
+using TilemapPointerInputSource = IdleTycoon.Scripts.PlayerInput.Tilemap.InputSources.PointerInputSource;
 
 namespace IdleTycoon.Scripts
 {
@@ -28,16 +29,16 @@ namespace IdleTycoon.Scripts
         [SerializeField] private TilePreviewDefinition[] tilePreviews;
         
         [SerializeField] private new Camera camera;
-        [SerializeField] private InputActionReference pointerPosition;
-        [SerializeField] private InputActionReference pointerPress;
+        [SerializeField] private CameraPointerInputSource.InputActions cameraInputActions;
+        [SerializeField] private TilemapPointerInputSource.InputActions tilemapInputActions;
 
         public string json;
 
         private GameSession _session;
         private TilemapProcessor _processor;
-        private PointerInputRouter _pointerInputRouter;
         private TilemapPreviewRenderer _previewRenderer;
         
+        private InputModeController _inputModeController;
         private CameraController _cameraController;
 
         private const float TickTime = 1f;
@@ -57,7 +58,6 @@ namespace IdleTycoon.Scripts
         {
             _session?.Dispose();
             _processor?.Dispose();
-            _pointerInputRouter?.Dispose();
             _previewRenderer?.Dispose();
         }
 
@@ -83,26 +83,36 @@ namespace IdleTycoon.Scripts
             //Player input.
             GameSession.CommandsBus commandsBus = _session.GetCommandsBus();
             
-            BrushManager brushManager = new();
-            brushManager.Register("debug_area", new BrushDebugArea());
-            brushManager.Register("clean_area", new BrushCleanArea(commandsBus));
-            brushManager.Activate("clean_area");
-
+            //Player input. Camera.
             _cameraController = new CameraController(camera);
-            TilemapController tilemapController = new(brushManager, context);
+            CameraPointerInputSource cameraPointInputSource = new(_cameraController, cameraInputActions);
             
-            _pointerInputRouter = new PointerInputRouter(camera, pointerPosition, pointerPress, _cameraController, tilemapController);
-
+            //Player input. Tilemap.
+            BrushManager brushManager = new();
+            brushManager
+                .Register("debug_area", new BrushDebugArea())
+                .Register("clean_area", new BrushCleanArea(commandsBus));
+            brushManager.Activate("clean_area");
+            
+            TilemapController tilemapController = new(brushManager, context);
+            TilemapPointerInputSource tilemapPointerInputSource = new(camera, tilemapController, tilemapInputActions);
+            
+            //Player input. Input mode.
+            _inputModeController = new InputModeController();
+            _inputModeController
+                .Register(InputModeController.Mode.Camera, cameraPointInputSource)
+                .Register(InputModeController.Mode.Tilemap, tilemapPointerInputSource);
+            
             //Tilemap player input representation.
             _previewRenderer = new TilemapPreviewRenderer(previewTilemap, tilePreviews, brushManager);
             
             _session.Init();
+            
+            _inputModeController.Switch(InputModeController.Mode.Tilemap);
         }
         
         private void MainLoop(float deltaTime)
         {
-            _pointerInputRouter.Update();
-
             _session.Frame();
             
             _deltaTime += deltaTime;

@@ -19,7 +19,11 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap
         public Observable<Unit> OnConfirmationRequested => _onConfirmationRequested;
         public Observable<Unit> OnConfirmationCleared => _onConfirmationCleared;
 
-        public void Register(string name, Brush brush) => _brushes[name] = brush;
+        public BrushManager Register(string name, Brush brush)
+        {
+            _brushes[name] = brush;
+            return this;
+        }
 
         public bool Activate(string name)
         {

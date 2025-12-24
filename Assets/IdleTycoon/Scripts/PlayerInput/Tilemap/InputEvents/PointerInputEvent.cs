@@ -1,15 +1,15 @@
 using Unity.Mathematics;
 
-namespace IdleTycoon.Scripts.PlayerInput.Tilemap
+namespace IdleTycoon.Scripts.PlayerInput.Tilemap.InputEvents
 {
-    public readonly struct InputEvent
+    public readonly struct PointerInputEvent
     {
         public readonly int2 tile;
         
         public enum Type { Hover, Down, Drag, Up }
         public readonly Type type;
 
-        public InputEvent(Type type, int2 tile)
+        public PointerInputEvent(Type type, int2 tile)
         {
             this.type = type;
             this.tile = tile;

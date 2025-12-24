@@ -315,8 +315,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 105bc860047513503b64812082b68e08, type: 2}
   - {fileID: 11400000, guid: 419536d3324d527f8bf96bd441d4bddc, type: 2}
   camera: {fileID: 186921524}
-  pointerPosition: {fileID: -6864674455996870153, guid: 116b7ba482b007014bea08623f950887, type: 3}
-  pointerPress: {fileID: -3964198082994758983, guid: 116b7ba482b007014bea08623f950887, type: 3}
+  cameraInputActions:
+    point: {fileID: -6864674455996870153, guid: 116b7ba482b007014bea08623f950887, type: 3}
+    press: {fileID: -3964198082994758983, guid: 116b7ba482b007014bea08623f950887, type: 3}
+  tilemapInputActions:
+    point: {fileID: -2479670086051001779, guid: 116b7ba482b007014bea08623f950887, type: 3}
+    press: {fileID: -4843458983692850641, guid: 116b7ba482b007014bea08623f950887, type: 3}
   json: '{   "size": {     "x": 16,     "y": 16   },   "chunks": [     {       "position":
     {         "x": 0,         "y": 0       },       "tileAttributes": [         {          
     "flag": 0,           "value": 17940367284526521344         },         {          

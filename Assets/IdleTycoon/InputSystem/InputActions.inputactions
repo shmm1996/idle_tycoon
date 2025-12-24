@@ -3,7 +3,7 @@
     "name": "InputActions",
     "maps": [
         {
-            "name": "Gameplay",
+            "name": "Camera",
             "id": "a765f776-9882-4655-b4da-74511c1c2bcf",
             "actions": [
                 {
@@ -40,6 +40,54 @@
                 {
                     "name": "",
                     "id": "92074690-0dc8-4057-95fe-3b099d2a5b30",
+                    "path": "<Pointer>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Mouse",
+                    "action": "Click (Button)",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Tilemap.Editor",
+            "id": "d3944c82-0bad-43dd-9f65-c087e05ed0f0",
+            "actions": [
+                {
+                    "name": "Point (Vector2)",
+                    "type": "Value",
+                    "id": "cf0b11e9-09cc-4623-8928-7ec20ee7332a",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Click (Button)",
+                    "type": "Button",
+                    "id": "abc34597-09c8-445f-87e1-5370e8c74297",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4868d59b-068e-4719-8547-c4a67bca1253",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Mouse",
+                    "action": "Point (Vector2)",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0ed13979-608c-4a5e-8ab8-98f01d1570a8",
                     "path": "<Pointer>/press",
                     "interactions": "",
                     "processors": "",

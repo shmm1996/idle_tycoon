@@ -1,3 +1,4 @@
+using IdleTycoon.Scripts.PlayerInput.Camera.InputEvents;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -33,32 +34,32 @@ namespace IdleTycoon.Scripts.PlayerInput.Camera
             _transform = camera.transform;
         }
 
-        public void Process(InputEvent input) //TODO: Make async UniTask.
+        public void Process(PointerInputEvent pointerInput) //TODO: Make async UniTask.
         {
-            switch (input.type)
+            switch (pointerInput.type)
             {
-                case InputEvent.Type.Down when _state is State.Idle:
+                case PointerInputEvent.Type.Down when _state is State.Idle:
                     _state = State.Pressing;
-                    _pressScreen = input.screen;
-                    _pressTime = input.unscaledTime;
+                    _pressScreen = pointerInput.screen;
+                    _pressTime = pointerInput.unscaledTime;
                     break;
-                case InputEvent.Type.Dragging
+                case PointerInputEvent.Type.Dragging
                     when _state is State.Pressing && 
-                         ((input.unscaledTime - _pressTime > DragAfterTimeSeconds && math.lengthsq(_pressScreen - input.screen) > TinyMoveSq) ||
-                          math.lengthsq(_pressScreen - input.screen) > DeadZonePixelsSq):
+                         ((pointerInput.unscaledTime - _pressTime > DragAfterTimeSeconds && math.lengthsq(_pressScreen - pointerInput.screen) > TinyMoveSq) ||
+                          math.lengthsq(_pressScreen - pointerInput.screen) > DeadZonePixelsSq):
                     _state = State.Drag;
-                    _cursorScreen = input.screen;
-                    _anchorWorldUnderCursor = ScreenToWorld(input.screen);
+                    _cursorScreen = pointerInput.screen;
+                    _anchorWorldUnderCursor = ScreenToWorld(pointerInput.screen);
                     _dragStartCameraPosition = _transform.position;
                     UpdateTargetPosition();
                     break;
-                case InputEvent.Type.Dragging when _state is State.Drag:
-                    _cursorScreen = input.screen;
+                case PointerInputEvent.Type.Dragging when _state is State.Drag:
+                    _cursorScreen = pointerInput.screen;
                     break;
-                case InputEvent.Type.Up when _state is State.Pressing: 
+                case PointerInputEvent.Type.Up when _state is State.Pressing: 
                     _state = State.Idle; 
                     break;
-                case InputEvent.Type.Up when _state is State.Drag: 
+                case PointerInputEvent.Type.Up when _state is State.Drag: 
                     _state = State.Inertia; 
                     UpdateTargetPosition();
                     break;

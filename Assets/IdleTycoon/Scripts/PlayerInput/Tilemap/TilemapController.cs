@@ -1,5 +1,6 @@
 using IdleTycoon.Scripts.Data.Session;
 using IdleTycoon.Scripts.PlayerInput.Tilemap.Brushes;
+using IdleTycoon.Scripts.PlayerInput.Tilemap.InputEvents;
 
 namespace IdleTycoon.Scripts.PlayerInput.Tilemap
 {
@@ -7,8 +8,6 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap
     {
         private readonly BrushManager _manager;
         private readonly GameSession.Context _context;
-        
-        public bool IsReady => _manager.Active != null; //TODO: Remove. Do not use for reading player control state.
 
         public TilemapController(BrushManager manager, GameSession.Context context)
         {
@@ -16,19 +15,19 @@ namespace IdleTycoon.Scripts.PlayerInput.Tilemap
             _context = context;
         }
 
-        public void Process(InputEvent input) //TODO: Make async UniTask.
+        public void Process(PointerInputEvent pointerInput) //TODO: Make async UniTask.
         {
-            if (!_context.WorldMap.HasTile(input.tile)) return; //TODO: Process in brush. Hide or ceil on drag area.
+            if (!_context.WorldMap.HasTile(pointerInput.tile)) return; //TODO: Process in brush. Hide or ceil on drag area.
             
             Brush brush = _manager.Active;
             if (brush == null) return;
             
-            switch (input.type)
+            switch (pointerInput.type)
             {
-                case InputEvent.Type.Hover: brush.Hover(input.tile); break;
-                case InputEvent.Type.Down: brush.Down(input.tile); break;
-                case InputEvent.Type.Drag: brush.Drag(input.tile); break;
-                case InputEvent.Type.Up: brush.Up(input.tile); break;
+                case PointerInputEvent.Type.Hover: brush.Hover(pointerInput.tile); break;
+                case PointerInputEvent.Type.Down: brush.Down(pointerInput.tile); break;
+                case PointerInputEvent.Type.Drag: brush.Drag(pointerInput.tile); break;
+                case PointerInputEvent.Type.Up: brush.Up(pointerInput.tile); break;
                 default: return;
             }
 
